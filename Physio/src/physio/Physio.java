@@ -22,11 +22,10 @@ public class Physio {
         this.kinesist = kinesist;
     }
     
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        // TODO code application logic here
+    public String getKinesist()
+    {
+        return kinesist;
     }
+    
     
 }
