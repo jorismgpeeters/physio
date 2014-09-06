@@ -12,6 +12,16 @@ package physio;
  */
 public class Physio {
 
+    private String kinesist = null;
+    
+    /**
+     * Constructor met naam van de deelnemende kinesist
+     * @param kinesist - de deelnemende kinesist
+     */
+    public Physio(String kinesist){
+        this.kinesist = kinesist;
+    }
+    
     /**
      * @param args the command line arguments
      */
