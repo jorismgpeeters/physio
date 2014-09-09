@@ -31,7 +31,7 @@ public class PhysioUI extends javax.swing.JFrame {
     
     private DataInterface getDataInterface(){
         // TODO: Probably use singleton pattern here.
-        return new DataInterface();
+       return dataInterface;
     }
     
     private void refreshPatientsList() throws DataException{
