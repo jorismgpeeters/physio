@@ -13,6 +13,10 @@ package physio;
 public class Physio {
 
     private String kinesist = null;
+    private String naam = null;
+    private String voornaam = null;
+    private String riziv = null;
+    private String emailadres = null;
     
     /**
      * Constructor met naam van de deelnemende kinesist

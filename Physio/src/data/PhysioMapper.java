@@ -10,6 +10,7 @@ import java.io.*;
 import java.sql.*;
 import java.util.*;
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import physio.Patient;
 
 
@@ -23,20 +24,45 @@ public class PhysioMapper extends JFrame {
     private Connection con = null;
     private String padnaam = null;
     private static final String DRIVERNAAM = "org.firebirdsql.jdbc.FBDriver";
-    private String url = "jdbc:firebirdsql://localhost/" + padnaam;
+    private String url = "jdbc:firebirdsql://localhost/";
     private final String GEBRUIKERSNAAM = "SYSDBA";
     private static final String WACHTWOORD = "masterkey";
     
     public PhysioMapper() throws PhysioException{
         JFileChooser chooseDB = new JFileChooser();
-        int chosen = chooseDB.showDialog(this, "Open");
-        String urlDB = null;
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Firebird databasefile", "fdb");
+        chooseDB.setFileFilter(filter);
+        int chosen = chooseDB.showDialog(this, "Selecteer de database");
         if(chosen == JFileChooser.APPROVE_OPTION){
             File database = chooseDB.getSelectedFile();
-            urlDB = database.getPath();
+            padnaam = database.getPath();
         }
-        padnaam = urlDB;
+        url = url + padnaam;
+        System.out.println("padnaam is: " + padnaam);
+        System.out.println("URL is: " + url);
         maakConnectie();
+        PreparedStatement p = null;
+        try{
+            p = con.prepareStatement("SELECT * FROM Oefening");
+        }
+        catch (SQLException e){
+            throw new PhysioException("prepStatement mislukt");
+        }
+        String naam = null;
+        String begin = null;
+        String instructie = null;
+        try{
+            ResultSet res = p.executeQuery();
+            while(res.next()){
+                naam = res.getString(2);
+                begin = res.getString(3);
+                instructie = res.getString(4);
+            }
+        }
+        catch(SQLException e){
+            throw new PhysioException("inlezen data mislukt");
+        }
+        System.out.println("naam: " + naam + ", beginhouding: " + begin + ", instructie: " + instructie);
     }
     
     private void maakConnectie() throws PhysioException{

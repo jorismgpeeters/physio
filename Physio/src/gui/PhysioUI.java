@@ -8,6 +8,8 @@ package gui;
 import physio.*;
 import datainterface.*;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -16,24 +18,25 @@ import java.util.*;
  */
 public class PhysioUI extends javax.swing.JFrame {
 
+    private DataInterface dataInterface = null;
     /**
      * Creates new form PhysioUI
      */
-    public PhysioUI() {
+    public PhysioUI() throws DataException {
         initComponents();
-        
+        dataInterface = new DataInterface();
         refreshPatientsList();
         jList1.setSelectedIndex(0);
     }
     
-    private DataInterface getDataInterface() {
+    private DataInterface getDataInterface(){
         // TODO: Probably use singleton pattern here.
         return new DataInterface();
     }
     
-    private void refreshPatientsList() {
+    private void refreshPatientsList() throws DataException{
         javax.swing.DefaultListModel listModel = new javax.swing.DefaultListModel(); 
-        for (Patient p : getDataInterface().getAllPatients())
+        for (Patient p : dataInterface.getAllPatients())
             listModel.addElement(p.getVoornaam() + " " + p.getAchternaam());
 
         jList1.setModel(listModel); 
@@ -325,7 +328,7 @@ public class PhysioUI extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String args[]){
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -351,8 +354,10 @@ public class PhysioUI extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new PhysioUI().setVisible(true);
+            public void run(){
+                try {
+                    new PhysioUI().setVisible(true);
+                } catch (DataException ex) {}
             }
         });
     }

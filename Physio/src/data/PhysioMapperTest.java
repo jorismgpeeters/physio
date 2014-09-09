@@ -13,5 +13,6 @@ package data;
 public class PhysioMapperTest {
      public static void main(String[] args) throws PhysioException{
         PhysioMapper pm = new PhysioMapper();
+        System.out.println("tis gelukt!");
     }
 }
