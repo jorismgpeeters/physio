@@ -12,22 +12,35 @@ package physio;
  */
 public class Physio {
 
-    private String kinesist = null;
     private String naam = null;
     private String voornaam = null;
     private String riziv = null;
     private String emailadres = null;
     
     /**
-     * Constructor met naam van de deelnemende kinesist
-     * @param kinesist - de deelnemende kinesist
+     * Constructor met gegevens van de deelnemende kinesist
      */
-    public Physio(String kinesist){
-        this.kinesist = kinesist;
+    public Physio(String naam, String voornaam, String riziv, String email){
+        this.naam = naam;
+        this.voornaam = voornaam;
+        this.riziv = riziv;
+        this.emailadres = email;
     }
     
-    public String getKinesist()
+    public String getNaam()
     {
-        return kinesist;
+        return naam;
+    }
+    
+    public String getVoornaam(){
+        return voornaam;
+    }
+    
+    public String getRiziv(){
+        return riziv;
+    }
+    
+    public String getEmail(){
+        return emailadres;
     }
 }

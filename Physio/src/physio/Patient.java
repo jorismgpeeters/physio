@@ -6,15 +6,18 @@
 
 package physio;
 
+import java.util.ArrayList;
+
 /**
  *
- * @author Joris
+ * @author Joris, Lieven
  */
 public class Patient {
     private String nummer;
     private String voornaam;
     private String achternaam;
     private String emailadres;
+    private ArrayList<ExerciseProgram> exerciseprograms = null;
     
     /**
      * Constructor
@@ -46,6 +49,12 @@ public class Patient {
         return emailadres;
     }
     
+    public void setExerciseProgram(ArrayList<ExerciseProgram> exerciseprograms){
+        this.exerciseprograms = exerciseprograms;
+    }
     
-    
+    public ArrayList<ExerciseProgram> getExercisePrograms(){
+        return exerciseprograms;
+    }
+
 }

@@ -21,6 +21,7 @@ import physio.*;
     private static final String PASSWORD = "masterkey";
     private PreparedStatement pSelectPatient = null;
     private PreparedStatement pSelectPhysio = null;
+    private PreparedStatement pSelectExProg = null;
     
     /**
      * Establishes the connection to the specific database and initialises the 
@@ -61,8 +62,9 @@ import physio.*;
     
     private void initialisePreparedStatements() throws DataException{
         try{
-            pSelectPatient = con.prepareStatement("SELECT * FROM Patient");
-            pSelectPhysio = con.prepareStatement("SELECT * FROM Kinesist");
+            pSelectPatient = con.prepareStatement("SELECT * FROM Patient ORDER BY Naam");
+            pSelectPhysio = con.prepareStatement("SELECT * FROM Kinesist ORDER BY Naam");
+            pSelectExProg = con.prepareStatement("SELECT * FROM Oefenschema WHERE Patient = ? ORDER BY Volgnummer");
         }
         catch (SQLException e){
             throw new DataException("Error in creating the SQL-statements");
@@ -81,7 +83,7 @@ import physio.*;
         }  
     }
     
-    public ArrayList<Patient> getAllPatients() {
+    public ArrayList<Patient> readAllPatients() {
         ArrayList<Patient> result = new ArrayList<>();
         try{
             ResultSet res = pSelectPatient.executeQuery();
@@ -101,4 +103,50 @@ import physio.*;
         }
     }
     
+     public ArrayList<Physio> readAllPhysios() {
+        ArrayList<Physio> result = new ArrayList<>();
+        try{
+            ResultSet res = pSelectPhysio.executeQuery();
+            while(res.next()){
+                String naam = res.getString(2);
+                String voornaam = res.getString(3);
+                String riziv = res.getString(1);
+                String email = res.getString(4);
+                Physio physio = new Physio(naam, voornaam, riziv, email);
+                result.add(physio);
+            }
+        }
+        catch (SQLException e){  
+        }
+        finally{
+            return result;
+        }
+    }
+     
+    public ArrayList<ExerciseProgram> readExercisePrograms(Patient patient) throws DataException{
+        String patientnummer = patient.getNummer();
+        ArrayList<ExerciseProgram> exerciseprograms = null;
+        try{
+            pSelectExProg.setString(1, patientnummer);
+            ResultSet res = pSelectExProg.executeQuery();
+            while(res.next()){
+               int volgnummer = res.getInt(2);
+               java.sql.Date datum = res.getDate(3);
+               String riziv = res.getString(4);
+               Physio physio = null;
+               for(Physio p: readAllPhysios()){
+                   if(p.getRiziv().equals(riziv)){
+                       physio = p;
+                   }
+               }
+               ExerciseProgram exprog = new ExerciseProgram(patient, volgnummer, datum, physio);
+               exerciseprograms.add(exprog);
+            }
+        }
+        catch(SQLException e){
+            throw new DataException("Fout bij inlezen oefenschema-overzicht");
+        }
+        return exerciseprograms;
+    }
+  
 }
