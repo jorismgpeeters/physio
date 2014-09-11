@@ -51,8 +51,11 @@ public class PhysioUI extends javax.swing.JFrame {
     
     private void refreshExerciseProgramList(String patient) throws DataException{
         DefaultListModel listModel = new DefaultListModel();
-        for(ExerciseProgram exprog : admin.getExercisePrograms(patient)){
-            listModel.addElement(exprog.getVolgnummer());
+        ArrayList<ExerciseProgram> exerciseprogramList = admin.getExercisePrograms(patient);
+        if(exerciseprogramList != null){
+        for(ExerciseProgram exprog : exerciseprogramList){
+                listModel.addElement(exprog.getVolgnummer());
+            }
         }
         jList3.setModel(listModel);
     }
@@ -513,10 +516,10 @@ public class PhysioUI extends javax.swing.JFrame {
         jLabel13.setText(p.getVoornaam());
         jLabel14.setText(p.getAchternaam());
         jLabel15.setText(p.getEmailadres());
-        //try{
-        //    refreshExerciseProgramList(p.getNummer());
-        //}
-        //catch (DataException e){};
+        try{
+            refreshExerciseProgramList(p.getNummer());
+        }
+        catch (DataException e){};
     }//GEN-LAST:event_jList1ValueChanged
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
