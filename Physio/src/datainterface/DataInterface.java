@@ -125,14 +125,14 @@ import physio.*;
      
     public ArrayList<ExerciseProgram> readExercisePrograms(Patient patient) throws DataException{
         String patientnummer = patient.getNummer();
-        ArrayList<ExerciseProgram> exerciseprograms = null;
+        ArrayList<ExerciseProgram> exerciseprograms = new ArrayList<>();
         try{
             pSelectExProg.setString(1, patientnummer);
             ResultSet res = pSelectExProg.executeQuery();
             while(res.next()){
-               int volgnummer = res.getInt(2);
-               java.sql.Date datum = res.getDate(3);
-               String riziv = res.getString(4);
+               int volgnummer = res.getInt("Volgnummer");
+               java.sql.Date datum = res.getDate("Datum");
+               String riziv = res.getString("Kinesist");
                Physio physio = null;
                for(Physio p: readAllPhysios()){
                    if(p.getRiziv().equals(riziv)){
@@ -142,6 +142,7 @@ import physio.*;
                ExerciseProgram exprog = new ExerciseProgram(patient, volgnummer, datum, physio);
                exerciseprograms.add(exprog);
             }
+            
         }
         catch(SQLException e){
             throw new DataException("Fout bij inlezen oefenschema-overzicht");

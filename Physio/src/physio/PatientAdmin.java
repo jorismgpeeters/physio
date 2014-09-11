@@ -7,7 +7,9 @@
 package physio;
 
 import datainterface.*;
+import java.sql.Date;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 
 /**
  *
@@ -49,5 +51,11 @@ public class PatientAdmin {
             }
         }
         return null;
+    }
+    
+    private GregorianCalendar DateToGregCal(Date d){
+        GregorianCalendar cal = new GregorianCalendar();
+        cal.setTime(d);
+        return cal;
     }
 }

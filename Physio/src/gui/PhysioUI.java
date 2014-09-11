@@ -53,7 +53,7 @@ public class PhysioUI extends javax.swing.JFrame {
         DefaultListModel listModel = new DefaultListModel();
         ArrayList<ExerciseProgram> exerciseprogramList = admin.getExercisePrograms(patient);
         if(exerciseprogramList != null){
-        for(ExerciseProgram exprog : exerciseprogramList){
+            for(ExerciseProgram exprog : exerciseprogramList){
                 listModel.addElement(exprog.getVolgnummer());
             }
         }
