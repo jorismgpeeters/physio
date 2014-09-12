@@ -384,6 +384,11 @@ public class PhysioUI extends javax.swing.JFrame {
             public Object getElementAt(int i) { return strings[i]; }
         });
         jList3.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jList3.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                jList3ValueChanged(evt);
+            }
+        });
         jScrollPane3.setViewportView(jList3);
 
         jButton6.setText("Open");
@@ -518,6 +523,7 @@ public class PhysioUI extends javax.swing.JFrame {
         jLabel15.setText(p.getEmailadres());
         try{
             refreshExerciseProgramList(p.getNummer());
+            jList3.setSelectedIndex(0);
         }
         catch (DataException e){};
     }//GEN-LAST:event_jList1ValueChanged
@@ -567,6 +573,11 @@ public class PhysioUI extends javax.swing.JFrame {
         jLabel19.setText(p.getVoornaam());
         jLabel20.setText(p.getEmail());
     }//GEN-LAST:event_jList2ValueChanged
+
+    private void jList3ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList3ValueChanged
+        int index = jList3.getSelectedIndex();
+        // hier nog verder implementeren!
+    }//GEN-LAST:event_jList3ValueChanged
 
     /**
      * @param args the command line arguments

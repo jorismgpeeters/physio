@@ -64,7 +64,7 @@ import physio.*;
         try{
             pSelectPatient = con.prepareStatement("SELECT * FROM Patient ORDER BY Naam");
             pSelectPhysio = con.prepareStatement("SELECT * FROM Kinesist ORDER BY Naam");
-            pSelectExProg = con.prepareStatement("SELECT * FROM Oefenschema WHERE Patient = ? ORDER BY Volgnummer");
+            pSelectExProg = con.prepareStatement("SELECT * FROM Oefenschema join Kinesist on Oefenschema.Kinesist = Kinesist.riziv WHERE Patient = ? ORDER BY Volgnummer");
         }
         catch (SQLException e){
             throw new DataException("Error in creating the SQL-statements");
@@ -128,21 +128,18 @@ import physio.*;
         ArrayList<ExerciseProgram> exerciseprograms = new ArrayList<>();
         try{
             pSelectExProg.setString(1, patientnummer);
-            ResultSet res = pSelectExProg.executeQuery();
-            while(res.next()){
-               int volgnummer = res.getInt("Volgnummer");
-               java.sql.Date datum = res.getDate("Datum");
-               String riziv = res.getString("Kinesist");
-               Physio physio = null;
-               for(Physio p: readAllPhysios()){
-                   if(p.getRiziv().equals(riziv)){
-                       physio = p;
-                   }
-               }
+            ResultSet res2 = pSelectExProg.executeQuery();
+            while(res2.next()){
+               int volgnummer = res2.getInt("Volgnummer");
+               java.sql.Date datum = res2.getDate("Datum");
+               String riziv = res2.getString("Kinesist");
+               String naam = res2.getString("Naam");
+               String voornaam = res2.getString("Voornaam");
+               String email = res2.getString("Emailadres");
+               Physio physio = new Physio(naam, voornaam, riziv, email);
                ExerciseProgram exprog = new ExerciseProgram(patient, volgnummer, datum, physio);
                exerciseprograms.add(exprog);
-            }
-            
+            }            
         }
         catch(SQLException e){
             throw new DataException("Fout bij inlezen oefenschema-overzicht");

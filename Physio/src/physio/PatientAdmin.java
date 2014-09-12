@@ -40,6 +40,7 @@ public class PatientAdmin {
         Patient p = getPatient(patientnummer);
         if (p != null){
             p.setExerciseProgram(dataInterface.readExercisePrograms(p));
+            exerciseprogramlist = p.getExercisePrograms();
         }
         return exerciseprogramlist;
     }
