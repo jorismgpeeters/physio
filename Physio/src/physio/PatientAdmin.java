@@ -54,9 +54,15 @@ public class PatientAdmin {
         return null;
     }
     
-    private GregorianCalendar DateToGregCal(Date d){
-        GregorianCalendar cal = new GregorianCalendar();
-        cal.setTime(d);
-        return cal;
+    public ExerciseProgram getExerciseProgramDetail(String patientnummer, int volgnummer) throws DataException{
+        ExerciseProgram exprog = null;
+        for(ExerciseProgram e: getExercisePrograms(patientnummer)){
+            String ePatientnummer = e.getPatient().getNummer();
+            if(ePatientnummer.equals(patientnummer) && e.getVolgnummer() == volgnummer){
+                exprog = e;
+                return exprog;
+            }
+        }
+        return exprog;
     }
 }

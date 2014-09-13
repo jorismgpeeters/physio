@@ -128,14 +128,14 @@ import physio.*;
         ArrayList<ExerciseProgram> exerciseprograms = new ArrayList<>();
         try{
             pSelectExProg.setString(1, patientnummer);
-            ResultSet res2 = pSelectExProg.executeQuery();
-            while(res2.next()){
-               int volgnummer = res2.getInt("Volgnummer");
-               java.sql.Date datum = res2.getDate("Datum");
-               String riziv = res2.getString("Kinesist");
-               String naam = res2.getString("Naam");
-               String voornaam = res2.getString("Voornaam");
-               String email = res2.getString("Emailadres");
+            ResultSet res = pSelectExProg.executeQuery();
+            while(res.next()){
+               int volgnummer = res.getInt("Volgnummer");
+               java.sql.Date datum = res.getDate("Datum");
+               String riziv = res.getString("Kinesist");
+               String naam = res.getString("Naam");
+               String voornaam = res.getString("Voornaam");
+               String email = res.getString("Emailadres");
                Physio physio = new Physio(naam, voornaam, riziv, email);
                ExerciseProgram exprog = new ExerciseProgram(patient, volgnummer, datum, physio);
                exerciseprograms.add(exprog);

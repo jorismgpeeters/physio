@@ -6,6 +6,7 @@
 
 package gui;
 import datainterface.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -111,10 +112,11 @@ public class PhysioUI extends javax.swing.JFrame {
         jButton7 = new javax.swing.JButton();
         jButton8 = new javax.swing.JButton();
         jButton9 = new javax.swing.JButton();
-        jLabel21 = new javax.swing.JLabel();
-        jLabel22 = new javax.swing.JLabel();
-        jLabel23 = new javax.swing.JLabel();
-        jLabel24 = new javax.swing.JLabel();
+        jLabel25 = new javax.swing.JLabel();
+        jLabel26 = new javax.swing.JLabel();
+        jLabel27 = new javax.swing.JLabel();
+        jLabel28 = new javax.swing.JLabel();
+        jLabel29 = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -166,9 +168,9 @@ public class PhysioUI extends javax.swing.JFrame {
 
         jLabel2.setText("Riziv:");
 
-        jLabel3.setText("Naam:");
+        jLabel3.setText("Voornaam:");
 
-        jLabel4.setText("Voornaam:");
+        jLabel4.setText("Naam:");
 
         jLabel16.setText("Email:");
 
@@ -419,9 +421,11 @@ public class PhysioUI extends javax.swing.JFrame {
             }
         });
 
-        jLabel21.setText("Datum:");
+        jLabel25.setText("Info:");
 
-        jLabel23.setText("Kinesist:");
+        jLabel26.setText("Datum:");
+
+        jLabel27.setText("Kinesist:");
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -434,12 +438,16 @@ public class PhysioUI extends javax.swing.JFrame {
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 358, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel21)
-                            .addComponent(jLabel23))
-                        .addGap(48, 48, 48)
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel24)
-                            .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jLabel25)
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel26)
+                                    .addComponent(jLabel27))
+                                .addGap(37, 37, 37)
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel29)
+                                    .addComponent(jLabel28)))))
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addComponent(jButton6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -448,7 +456,7 @@ public class PhysioUI extends javax.swing.JFrame {
                         .addComponent(jButton8)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton9)))
-                .addContainerGap(123, Short.MAX_VALUE))
+                .addContainerGap(286, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -456,13 +464,15 @@ public class PhysioUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel21)
-                            .addComponent(jLabel22))
+                        .addComponent(jLabel25)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel23)
-                            .addComponent(jLabel24)))
+                            .addComponent(jLabel26)
+                            .addComponent(jLabel28))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel27)
+                            .addComponent(jLabel29)))
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, Short.MAX_VALUE)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -569,14 +579,32 @@ public class PhysioUI extends javax.swing.JFrame {
         int index = jList2.getSelectedIndex();
         Physio p = admin.getPhysios().get(index);
         jLabel17.setText(p.getRiziv());
-        jLabel18.setText(p.getNaam());
-        jLabel19.setText(p.getVoornaam());
+        jLabel18.setText(p.getVoornaam());
+        jLabel19.setText(p.getNaam());
         jLabel20.setText(p.getEmail());
     }//GEN-LAST:event_jList2ValueChanged
 
     private void jList3ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList3ValueChanged
-        int index = jList3.getSelectedIndex();
-        // hier nog verder implementeren!
+        if(jList3.isSelectionEmpty()){
+            jLabel28.setText("");
+            jLabel29.setText("");
+        }
+        else{
+            int volgnummer = (Integer)jList3.getSelectedValue();
+            int index = jList1.getSelectedIndex();
+            Patient p = admin.getPatients().get(index);
+            String pNummer = p.getNummer();
+            SimpleDateFormat sf = new SimpleDateFormat("dd-MM-yyyy");
+            try{
+                ExerciseProgram exprog = admin.getExerciseProgramDetail(pNummer, volgnummer);
+                String datum = sf.format(exprog.getDatum());
+                Physio physio = exprog.getPhysio();
+                String fullName = physio.getVoornaam() + " " + physio.getNaam();
+                jLabel28.setText(datum);
+                jLabel29.setText(fullName);
+            }
+            catch (DataException e){};
+        }
     }//GEN-LAST:event_jList3ValueChanged
 
     /**
@@ -640,10 +668,11 @@ public class PhysioUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
-    private javax.swing.JLabel jLabel21;
-    private javax.swing.JLabel jLabel22;
-    private javax.swing.JLabel jLabel23;
-    private javax.swing.JLabel jLabel24;
+    private javax.swing.JLabel jLabel25;
+    private javax.swing.JLabel jLabel26;
+    private javax.swing.JLabel jLabel27;
+    private javax.swing.JLabel jLabel28;
+    private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
