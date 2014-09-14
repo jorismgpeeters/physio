@@ -13,8 +13,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import java.text.SimpleDateFormat;
-import java.text.ParseException;
 
 /**
  *
@@ -107,7 +105,7 @@ public class ExerciseProgramTest {
      */
     @Test
     public void testGetPhysio() {
-        System.out.println("getPhysio");
+        System.out.println("ExerciseProgram::getPhysio");
         ExerciseProgram instance = e;
         Physio expResult = ph;
         Physio result = instance.getPhysio();
