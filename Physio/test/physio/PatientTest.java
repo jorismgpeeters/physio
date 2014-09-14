@@ -50,7 +50,7 @@ public class PatientTest {
      */
     @Test
     public void testGetNummer() {
-        System.out.println("getNummer");
+        System.out.println("Patient::getNummer");
         Patient instance = p;
         String expResult = testNummer;
         String result = instance.getNummer();
@@ -62,7 +62,7 @@ public class PatientTest {
      */
     @Test
     public void testGetVoornaam() {
-        System.out.println("getVoornaam");
+        System.out.println("Patient::getVoornaam");
         Patient instance =  p;
         String expResult = testVoornaam;
         String result = instance.getVoornaam();
@@ -74,7 +74,7 @@ public class PatientTest {
      */
     @Test
     public void testGetAchternaam() {
-        System.out.println("getAchternaam");
+        System.out.println("Patient::getAchternaam");
         Patient instance = p;
         String expResult = testAchternaam;
         String result = instance.getAchternaam();
@@ -86,7 +86,7 @@ public class PatientTest {
      */
     @Test
     public void testGetEmailadres() {
-        System.out.println("getEmailadres");
+        System.out.println("Patient::getEmailadres");
         Patient instance = p;
         String expResult = testEmail;
         String result = instance.getEmailadres();

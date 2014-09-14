@@ -45,7 +45,7 @@ public class ReadDataTest {
      */
     @Test
     public void testReadAllPhysios() {
-        System.out.println("readAllPhysios");
+        System.out.println("ReadDataTest::readAllPhysios");
         ArrayList<Physio> physios = DataInterface.getInstance().readAllPhysios();
         assertEquals(2, physios.size());
         assertEquals("Lieven", physios.get(0).getVoornaam());
@@ -57,7 +57,7 @@ public class ReadDataTest {
      */
     @Test
     public void testReadAllPatients() {
-        System.out.println("readAllPatients");
+        System.out.println("ReadDataTest::readAllPatients");
         ArrayList<Patient> patients = DataInterface.getInstance().readAllPatients();
         assertEquals(4, patients.size());
         assertEquals("Duck", patients.get(0).getAchternaam());
