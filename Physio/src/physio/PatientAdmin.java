@@ -23,7 +23,8 @@ public class PatientAdmin {
     private ArrayList<ExerciseProgram> exerciseprogramlist = null;
     
     public PatientAdmin() throws DataException{
-        dataInterface = new DataInterface();
+        //dataInterface = new DataInterface();
+        dataInterface = DataInterface.getInstance();
         patientlist = dataInterface.readAllPatients();
         physiolist = dataInterface.readAllPhysios();
     }

@@ -14,8 +14,10 @@ import physio.*;
  */
  public class DataInterface extends JFrame {
     
+     
+    private static DataInterface instance = null;
     private Connection con = null;
-    private String pathname = null;
+    private static String pathname = null;
     private String url = "jdbc:firebirdsql://localhost/";
     private static final String USERNAME = "SYSDBA";
     private static final String PASSWORD = "masterkey";
@@ -27,7 +29,7 @@ import physio.*;
      * Establishes the connection to the specific database and initialises the 
      * PreparedStatement-objects
      */
-    public DataInterface(){
+    protected DataInterface(){
         try{
             establishConnection();
             initialisePreparedStatements();
@@ -35,16 +37,39 @@ import physio.*;
         catch (DataException e){}
     }
     
-  
-    private void establishConnection() throws DataException{
+   public static DataInterface getInstance() {
+      if(instance == null) {
+         instance = new DataInterface();
+      }
+      return instance;
+   }    
+   
+   public static void setPreferredDB(String path)
+   {
+       pathname = path;
+   }
+   
+   private String getPathFromDialog()
+   {
         JFileChooser chooseDB = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Firebird database", "fdb");
         chooseDB.setFileFilter(filter);
         int chosen = chooseDB.showDialog(this, "Select database");
         if(chosen == JFileChooser.APPROVE_OPTION){
             File database = chooseDB.getSelectedFile();
-            pathname = database.getPath();
+            return database.getPath();
+        } else 
+            return null;
+   }
+    
+  
+    private void establishConnection() throws DataException{
+        
+        if (pathname == null)
+        {
+            pathname = getPathFromDialog();
         }
+
         url = url + pathname;
         try{
             DriverManager.setLogWriter(new PrintWriter(System.out));
@@ -92,7 +117,7 @@ import physio.*;
                 String naam = res.getString(2);
                 String voornaam = res.getString(3);
                 String email = res.getString(4);
-                Patient pt = new Patient(nummer, naam, voornaam, email);
+                Patient pt = new Patient(nummer, voornaam, naam, email);
                 result.add(pt);
             }
         }
