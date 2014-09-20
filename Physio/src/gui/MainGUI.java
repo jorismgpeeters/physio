@@ -5,19 +5,162 @@
  */
 
 package gui;
+import datainterface.*;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import javax.swing.DefaultListModel;
+import physio.*;
 
 /**
  *
  * @author Lieselotte
  */
-public class TestGUI extends javax.swing.JFrame {
+public class MainGUI extends javax.swing.JFrame {
+    
+    private PatientAdmin admin = null;
 
     /**
      * Creates new form NewJFrame
      */
-    public TestGUI() {
+    public MainGUI() throws DataException {
         initComponents();
+        admin = new PatientAdmin();
+        
+        refreshOverzichtPanel();
+        refreshPatientsPanel();
+        refreshPhysiosPanel();
     }
+    
+    private void refreshPatientLists() throws DataException {
+        refreshOvzPatientsList();
+        ovz_kin_list.setSelectedIndex(0);
+        refreshPatPatientsList();
+        pat_list.setSelectedIndex(0);
+    }    
+    
+    private void refreshOverzichtPanel() throws DataException {
+        refreshOvzPatientsList();
+        ovz_kin_list.setSelectedIndex(0);
+        refreshOvzPhysioList();
+        ovz_pat_list.setSelectedIndex(0);
+    }
+    
+    private void refreshPatientsPanel() throws DataException {
+        refreshPatPatientsList();
+        pat_list.setSelectedIndex(0);
+    }    
+    
+    private void refreshPhysiosPanel() throws DataException {
+        refreshKinPhysiosList();
+        kin_list.setSelectedIndex(0);
+    }      
+    
+    private void refreshOvzPatientsList() throws DataException {
+        DefaultListModel listModel = new DefaultListModel(); 
+        for (Patient p : admin.getPatients()){
+            listModel.addElement(p.getVoornaam() + " " + p.getAchternaam());
+        }
+        ovz_pat_list.setModel(listModel); 
+    }
+    
+    private void refreshOvzPhysioList() throws DataException{
+        DefaultListModel listModel = new DefaultListModel();
+        for (Physio p : admin.getPhysios()){
+            listModel.addElement(p.getVoornaam() + " " + p.getNaam());
+        }
+        ovz_kin_list.setModel(listModel);
+    }
+    
+    private void refreshPatPatientsList() throws DataException {
+        DefaultListModel listModel = new DefaultListModel(); 
+        for (Patient p : admin.getPatients()){
+            listModel.addElement(p.getVoornaam() + " " + p.getAchternaam());
+        }
+        pat_list.setModel(listModel); 
+    }
+    
+    private void refreshKinPhysiosList() throws DataException {
+        DefaultListModel listModel = new DefaultListModel(); 
+        for (Physio p : admin.getPhysios()){
+            listModel.addElement(p.getVoornaam() + " " + p.getNaam());
+        }
+        kin_list.setModel(listModel); 
+    }    
+    
+    private void refreshExerciseProgramList(String patient) throws DataException{
+        DefaultListModel listModel = new DefaultListModel();
+        ArrayList<ExerciseProgram> exerciseprogramList = admin.getExercisePrograms(patient);
+        if(exerciseprogramList != null){
+            for(ExerciseProgram exprog : exerciseprogramList){
+                listModel.addElement(exprog.getVolgnummer());
+            }
+        }
+        ovz_ovz_list.setModel(listModel);
+    }
+    
+    private void clearOvzKinInfo() 
+    {
+        setOvzKinInfo("","","","");
+    }
+    
+    private void setOvzKinInfo(String riziv, String voornaam, String naam, String email)
+    {
+        ovz_kin_riziv.setText(riziv);
+        ovz_kin_voornaam.setText(voornaam);
+        ovz_kin_naam.setText(naam);
+        ovz_kin_email.setText(email);          
+    }
+    
+    private void clearOvzPatInfo() 
+    {
+        setOvzPatInfo("","","","");
+    }    
+    
+    private void setOvzPatInfo(String nummer, String voornaam, String naam, String email)
+    {
+        ovz_pat_nummer.setText(nummer);
+        ovz_pat_voornaam.setText(voornaam);
+        ovz_pat_achternaam.setText(naam);
+        ovz_pat_email.setText(email);          
+    }   
+    
+    private void clearPatPatInfo() 
+    {
+        setPatPatInfo("","","","");
+    }    
+    
+    private void setPatPatInfo(String nummer, String voornaam, String naam, String email)
+    {
+        pat_nummer.setText(nummer);
+        pat_voornaam.setText(voornaam);
+        pat_achternaam.setText(naam);
+        pat_email.setText(email);          
+    }   
+    
+    private void clearOvzOvzInfo()
+    {
+        setOvzOvzInfo("","");
+    }
+    
+    private void setOvzOvzInfo(String datum, String kinesist)
+    {
+        ovz_ovz_datum.setText(datum);
+        ovz_ovz_kinesist.setText(kinesist);
+    }   
+    
+    private void clearKinKinInfo() 
+    {
+        setOvzKinInfo("","","","");
+    }
+    
+    private void setKinKinInfo(String riziv, String voornaam, String naam, String email)
+    {
+        kin_riziv.setText(riziv);
+        kin_voornaam.setText(voornaam);
+        kin_achternaam.setText(naam);
+        kin_email.setText(email);          
+    }    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -490,14 +633,6 @@ public class TestGUI extends javax.swing.JFrame {
 
         jLabel30.setText("Email:");
 
-        pat_nummer.setText("jLabel31");
-
-        pat_voornaam.setText("jLabel32");
-
-        pat_achternaam.setText("jLabel33");
-
-        pat_email.setText("jLabel34");
-
         pat_voegToe.setText("Voeg toe");
 
         pat_wijzig.setText("Wijzig gegevens");
@@ -750,15 +885,50 @@ public class TestGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void ovz_kin_listValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_ovz_kin_listValueChanged
-
+        clearOvzKinInfo();
+        // Get physio associated with this selection event
+        int index = ovz_kin_list.getSelectedIndex();
+        if (index >= 0) {
+            Physio p = admin.getPhysios().get(index);
+            setOvzKinInfo(p.getRiziv(), p.getVoornaam(), p.getNaam(), p.getEmail());
+        }      
     }//GEN-LAST:event_ovz_kin_listValueChanged
 
     private void ovz_pat_listValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_ovz_pat_listValueChanged
-        
+        clearOvzPatInfo();
+        // Get patient associated with this selection event
+        int index = ovz_pat_list.getSelectedIndex();
+        if (index >= 0) {
+            Patient p = admin.getPatients().get(index);
+            setOvzPatInfo(p.getNummer(), p.getVoornaam(), p.getAchternaam(), p.getEmailadres());
+            
+            try{
+                refreshExerciseProgramList(p.getNummer());
+                ovz_ovz_list.setSelectedIndex(0);
+            }
+            catch (DataException e){};            
+        }     
     }//GEN-LAST:event_ovz_pat_listValueChanged
 
     private void ovz_ovz_listValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_ovz_ovz_listValueChanged
-
+        
+        clearOvzOvzInfo();
+        if(!ovz_ovz_list.isSelectionEmpty()){
+            
+            int volgnummer = (Integer)ovz_ovz_list.getSelectedValue();
+            int index = ovz_pat_list.getSelectedIndex();
+            Patient p = admin.getPatients().get(index);
+            String pNummer = p.getNummer();
+            SimpleDateFormat sf = new SimpleDateFormat("dd-MM-yyyy");
+            try{
+                ExerciseProgram exprog = admin.getExerciseProgramDetail(pNummer, volgnummer);
+                String datum = sf.format(exprog.getDatum());
+                Physio physio = exprog.getPhysio();
+                String fullName = physio.getVoornaam() + " " + physio.getNaam();
+                setOvzOvzInfo(datum, fullName);
+            }
+            catch (DataException e){};
+        }        
     }//GEN-LAST:event_ovz_ovz_listValueChanged
 
     private void ovz_ovz_voegToeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ovz_ovz_voegToeActionPerformed
@@ -774,11 +944,23 @@ public class TestGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_ovz_ovz_wisActionPerformed
 
     private void pat_listValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_pat_listValueChanged
-        // TODO add your handling code here:
+        clearPatPatInfo();
+        // Get patient associated with this selection event
+        int index = pat_list.getSelectedIndex();
+        if (index >= 0) {
+            Patient p = admin.getPatients().get(index);
+            setPatPatInfo(p.getNummer(), p.getVoornaam(), p.getAchternaam(), p.getEmailadres());
+        }     
     }//GEN-LAST:event_pat_listValueChanged
 
     private void kin_listValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_kin_listValueChanged
-        // TODO add your handling code here:
+        clearKinKinInfo();
+        // Get physio associated with this selection event
+        int index = kin_list.getSelectedIndex();
+        if (index >= 0) {
+            Physio p = admin.getPhysios().get(index);
+            setKinKinInfo(p.getRiziv(), p.getVoornaam(), p.getNaam(), p.getEmail());
+        }   
     }//GEN-LAST:event_kin_listValueChanged
 
     /**
@@ -798,20 +980,22 @@ public class TestGUI extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(TestGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MainGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(TestGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MainGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(TestGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MainGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(TestGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MainGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new TestGUI().setVisible(true);
+                try {
+                    new MainGUI().setVisible(true);
+                } catch (DataException ex) {}
             }
         });
     }

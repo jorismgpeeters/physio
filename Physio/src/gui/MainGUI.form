@@ -781,24 +781,12 @@
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="pat_nummer">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="jLabel31"/>
-                  </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="pat_voornaam">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="jLabel32"/>
-                  </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="pat_achternaam">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="jLabel33"/>
-                  </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="pat_email">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="jLabel34"/>
-                  </Properties>
                 </Component>
                 <Component class="javax.swing.JButton" name="pat_voegToe">
                   <Properties>
