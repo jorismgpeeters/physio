@@ -66,4 +66,20 @@ public class PatientAdmin {
         }
         return exprog;
     }
+    
+    public void addPatient(String nummer, String achternaam, String voornaam, String email) throws DataException{
+        dataInterface.addPatient(nummer, achternaam, voornaam, email);
+        patientlist = dataInterface.readAllPatients();
+    }
+    
+    public void deletePatient(Patient patient) throws DataException{
+        String patientnummer = patient.getNummer();
+        dataInterface.deletePatient(patientnummer);
+        patientlist = dataInterface.readAllPatients();
+    }
+    
+    public void updatePatient(String nummer, String achternaam, String voornaam, String email) throws DataException{
+        dataInterface.updatePatient(nummer, achternaam, voornaam, email);
+        patientlist = dataInterface.readAllPatients();
+    }
 }

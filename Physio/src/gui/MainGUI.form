@@ -792,16 +792,25 @@
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Voeg toe"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="pat_voegToeActionPerformed"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JButton" name="pat_wijzig">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Wijzig gegevens"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="pat_wijzigActionPerformed"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JButton" name="pat_wis">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Verwijder"/>
+                    <Property name="text" type="java.lang.String" value="Wis"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="pat_wisActionPerformed"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>
@@ -974,7 +983,7 @@
             </Component>
             <Component class="javax.swing.JButton" name="kin_wis">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Verwijder"/>
+                <Property name="text" type="java.lang.String" value="Wis"/>
               </Properties>
             </Component>
           </SubComponents>
@@ -1057,7 +1066,7 @@
             </Component>
             <Component class="javax.swing.JButton" name="oef_wis">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Verwijder"/>
+                <Property name="text" type="java.lang.String" value="Wis"/>
               </Properties>
             </Component>
           </SubComponents>

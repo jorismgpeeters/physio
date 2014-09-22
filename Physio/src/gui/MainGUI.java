@@ -9,6 +9,9 @@ import datainterface.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import javax.swing.DefaultListModel;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import physio.*;
 
 /**
@@ -634,10 +637,25 @@ public class MainGUI extends javax.swing.JFrame {
         jLabel30.setText("Email:");
 
         pat_voegToe.setText("Voeg toe");
+        pat_voegToe.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pat_voegToeActionPerformed(evt);
+            }
+        });
 
         pat_wijzig.setText("Wijzig gegevens");
+        pat_wijzig.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pat_wijzigActionPerformed(evt);
+            }
+        });
 
-        pat_wis.setText("Verwijder");
+        pat_wis.setText("Wis");
+        pat_wis.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pat_wisActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pat_pat_panelLayout = new javax.swing.GroupLayout(pat_pat_panel);
         pat_pat_panel.setLayout(pat_pat_panelLayout);
@@ -753,7 +771,7 @@ public class MainGUI extends javax.swing.JFrame {
 
         kin_wijzig.setText("Wijzig gegevens");
 
-        kin_wis.setText("Verwijder");
+        kin_wis.setText("Wis");
 
         javax.swing.GroupLayout kin_tabLayout = new javax.swing.GroupLayout(kin_tab);
         kin_tab.setLayout(kin_tabLayout);
@@ -837,7 +855,7 @@ public class MainGUI extends javax.swing.JFrame {
 
         oef_wijzig.setText("Wijzig oefening");
 
-        oef_wis.setText("Verwijder");
+        oef_wis.setText("Wis");
 
         javax.swing.GroupLayout oef_tabLayout = new javax.swing.GroupLayout(oef_tab);
         oef_tab.setLayout(oef_tabLayout);
@@ -962,6 +980,66 @@ public class MainGUI extends javax.swing.JFrame {
             setKinKinInfo(p.getRiziv(), p.getVoornaam(), p.getNaam(), p.getEmail());
         }   
     }//GEN-LAST:event_kin_listValueChanged
+
+    private void pat_voegToeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pat_voegToeActionPerformed
+        try{
+            JTextField inputNummer = new JTextField();
+            JTextField inputVoornaam = new JTextField();
+            JTextField inputAchternaam = new JTextField();
+            JTextField inputEmail = new JTextField();
+            Object[] message = {
+                "Patientnummer:", inputNummer,
+                "Voornaam:", inputVoornaam,
+                "Achternaam:", inputAchternaam,
+                "Emailadres:", inputEmail
+            };
+            int optie = JOptionPane.showOptionDialog(this, message, "Geef gegevens nieuwe patient in", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+            if(optie == JOptionPane.OK_OPTION){
+                admin.addPatient(inputNummer.getText(), inputAchternaam.getText(), inputVoornaam.getText(), inputEmail.getText());
+                refreshPatientLists();
+            }
+        }    
+        catch(DataException e){
+            JOptionPane.showMessageDialog(this, "Fout bij het invoeren van deze patiënt");
+        }
+    }//GEN-LAST:event_pat_voegToeActionPerformed
+
+    private void pat_wijzigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pat_wijzigActionPerformed
+        try{
+            int index = pat_list.getSelectedIndex();
+                if (index >= 0) {
+                    Patient p = admin.getPatients().get(index);
+                    JTextField inputvoornaam = new JTextField(p.getVoornaam());
+                    JTextField inputachternaam = new JTextField(p.getAchternaam());
+                    JTextField inputEmail = new JTextField(p.getEmailadres());
+                    Object[] message = {
+                    "Voornaam:", inputvoornaam,
+                    "Achternaam:", inputachternaam,
+                    "Emailadres:", inputEmail
+                    };
+                    int optie = JOptionPane.showOptionDialog(this, message, "Wijzig gegevens", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+                    if(optie == JOptionPane.OK_OPTION){
+                        admin.updatePatient(p.getNummer(), inputachternaam.getText(), inputvoornaam.getText(), inputEmail.getText());
+                        refreshPatientLists();
+                    }
+                }
+        }
+        catch(DataException e){
+            JOptionPane.showMessageDialog(this, "Fout bij het wijzigen van de gegevens van deze patiënt");
+        }
+    }//GEN-LAST:event_pat_wijzigActionPerformed
+
+    private void pat_wisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pat_wisActionPerformed
+        try{
+            int index = pat_list.getSelectedIndex();
+            if (index >= 0) {
+                Patient p = admin.getPatients().get(index);
+                admin.deletePatient(p);
+                refreshPatientLists();
+            }
+        }
+        catch(DataException e){}
+    }//GEN-LAST:event_pat_wisActionPerformed
 
     /**
      * @param args the command line arguments

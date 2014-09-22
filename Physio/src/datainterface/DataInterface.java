@@ -24,6 +24,9 @@ import physio.*;
     private PreparedStatement pSelectPatient = null;
     private PreparedStatement pSelectPhysio = null;
     private PreparedStatement pSelectExProg = null;
+    private PreparedStatement pAddPatient = null;
+    private PreparedStatement pDeletePatient = null;
+    private PreparedStatement pUpdatePatient = null;
     
     /**
      * Establishes the connection to the specific database and initialises the 
@@ -87,9 +90,13 @@ import physio.*;
     
     private void initialisePreparedStatements() throws DataException{
         try{
-            pSelectPatient = con.prepareStatement("SELECT * FROM Patient ORDER BY Naam");
+            pSelectPatient = con.prepareStatement("SELECT * FROM Patient ORDER BY Naam, Voornaam");
             pSelectPhysio = con.prepareStatement("SELECT * FROM Kinesist ORDER BY Naam");
             pSelectExProg = con.prepareStatement("SELECT * FROM Oefenschema join Kinesist on Oefenschema.Kinesist = Kinesist.riziv WHERE Patient = ? ORDER BY Volgnummer");
+            pAddPatient = con.prepareStatement("INSERT INTO Patient VALUES (?, ?, ?, ?)");
+            pDeletePatient = con.prepareStatement("DELETE FROM Patient WHERE Patientnummer = ?");
+            pUpdatePatient = con.prepareStatement("UPDATE Patient SET Naam = ?, Voornaam = ?, Emailadres = ? WHERE Patientnummer = ?");
+            
         }
         catch (SQLException e){
             throw new DataException("Error in creating the SQL-statements");
@@ -171,5 +178,40 @@ import physio.*;
         }
         return exerciseprograms;
     }
-  
+    
+    public void addPatient(String nummer, String achternaam, String voornaam, String email) throws DataException{
+        try{
+            pAddPatient.setString(1, nummer);
+            pAddPatient.setString(2, achternaam);
+            pAddPatient.setString(3, voornaam);
+            pAddPatient.setString(4, email);
+            pAddPatient.executeUpdate();
+        }
+        catch(SQLException e){
+            throw new DataException("Fout bij toevoegen patient in database");
+        }
+    }
+    
+    public void deletePatient(String patientnummer) throws DataException{
+        try{
+            pDeletePatient.setString(1, patientnummer);
+            pDeletePatient.executeUpdate();
+        }
+        catch(SQLException e){
+            throw new DataException("Fout bij het verwijderen van deze patiënt");
+        }
+    }
+    
+    public void updatePatient(String patientnummer, String achternaam, String voornaam, String email) throws DataException{
+        try{
+           pUpdatePatient.setString(1, achternaam);
+           pUpdatePatient.setString(2, voornaam);
+           pUpdatePatient.setString(3, email);
+           pUpdatePatient.setString(4, patientnummer);
+           pUpdatePatient.executeUpdate();
+        }
+        catch(SQLException e){
+            throw new DataException("De aangebrachte wijzigingen kunnen niet uitgevoerd worden");
+        }
+    }
 }
