@@ -82,4 +82,28 @@ public class PatientAdmin {
         dataInterface.updatePatient(nummer, achternaam, voornaam, email);
         patientlist = dataInterface.readAllPatients();
     }
+    
+     public void addPhysio(String riziv, String achternaam, String voornaam, String email) throws DataException{
+        dataInterface.addPhysio(riziv, achternaam, voornaam, email);
+        physiolist = dataInterface.readAllPhysios();
+    }
+     
+    public void updatePhysio(String riziv, String achternaam, String voornaam, String email) throws DataException{
+        dataInterface.updatePhysio(riziv, achternaam, voornaam, email);
+        physiolist = dataInterface.readAllPhysios();
+    }
+    
+    public void deletePhysio(Physio physio) throws DataException{
+        String riziv = physio.getRiziv();
+        dataInterface.deletePatient(riziv);
+        physiolist = dataInterface.readAllPhysios();
+    }
+    
+    public void addExProg(String patientnummer, java.sql.Date datum, String rizivkine) throws DataException{
+        dataInterface.addExProg(patientnummer, datum, rizivkine);
+    }
+    
+    public void deleteExProg(String patientnummer, int volgnummer) throws DataException{
+        dataInterface.deleteExProg(patientnummer, volgnummer);
+    }
 }

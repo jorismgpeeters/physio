@@ -27,6 +27,13 @@ import physio.*;
     private PreparedStatement pAddPatient = null;
     private PreparedStatement pDeletePatient = null;
     private PreparedStatement pUpdatePatient = null;
+    private PreparedStatement pAddPhysio = null;
+    private PreparedStatement pDeletePhysio = null;
+    private PreparedStatement pUpdatePhysio = null;
+    private PreparedStatement pAddExProg = null;
+    private PreparedStatement pDeleteExProg = null;
+    private PreparedStatement pGetMaxVolgnummer = null;
+    private PreparedStatement pGetMaxID = null;
     
     /**
      * Establishes the connection to the specific database and initialises the 
@@ -91,12 +98,18 @@ import physio.*;
     private void initialisePreparedStatements() throws DataException{
         try{
             pSelectPatient = con.prepareStatement("SELECT * FROM Patient ORDER BY Naam, Voornaam");
-            pSelectPhysio = con.prepareStatement("SELECT * FROM Kinesist ORDER BY Naam");
+            pSelectPhysio = con.prepareStatement("SELECT * FROM Kinesist ORDER BY Naam, Voornaam");
             pSelectExProg = con.prepareStatement("SELECT * FROM Oefenschema join Kinesist on Oefenschema.Kinesist = Kinesist.riziv WHERE Patient = ? ORDER BY Volgnummer");
             pAddPatient = con.prepareStatement("INSERT INTO Patient VALUES (?, ?, ?, ?)");
             pDeletePatient = con.prepareStatement("DELETE FROM Patient WHERE Patientnummer = ?");
             pUpdatePatient = con.prepareStatement("UPDATE Patient SET Naam = ?, Voornaam = ?, Emailadres = ? WHERE Patientnummer = ?");
-            
+            pAddPhysio = con.prepareStatement("INSERT INTO Kinesist VALUES (?, ?, ?, ?)");
+            pDeletePatient = con.prepareStatement("DELETE FROM Kinesist WHERE Riziv = ?");
+            pUpdatePhysio = con.prepareStatement("UPDATE Kinesist SET Naam = ?, Voornaam = ?, Emailadres = ? WHERE Riziv = ?");
+            pAddExProg = con.prepareStatement("INSERT INTO Oefenschema VALUES (?, ?, ?, ?, ?)");
+            pDeleteExProg = con.prepareStatement("DELETE FROM Oefenschema WHERE Patient = ? AND Volgnummer = ?");
+            pGetMaxVolgnummer = con.prepareStatement("SELECT max(Volgnummer) FROM Oefenschema WHERE Patient = ?");
+            pGetMaxID = con.prepareStatement("SELECT max(ID) FROM Oefenschema");
         }
         catch (SQLException e){
             throw new DataException("Error in creating the SQL-statements");
@@ -212,6 +225,99 @@ import physio.*;
         }
         catch(SQLException e){
             throw new DataException("De aangebrachte wijzigingen kunnen niet uitgevoerd worden");
+        }
+    }
+    
+    public void addPhysio(String riziv, String achternaam, String voornaam, String email) throws DataException{
+        try{
+            pAddPhysio.setString(1, riziv);
+            pAddPhysio.setString(2, achternaam);
+            pAddPhysio.setString(3, voornaam);
+            pAddPhysio.setString(4, email);
+            pAddPhysio.executeUpdate();
+        }
+        catch(SQLException e){
+            throw new DataException("Fout bij toevoegen kinesist in database");
+        }
+    }
+    
+    public void updatePhysio(String riziv, String achternaam, String voornaam, String email) throws DataException{
+        try{
+           pUpdatePhysio.setString(1, achternaam);
+           pUpdatePhysio.setString(2, voornaam);
+           pUpdatePhysio.setString(3, email);
+           pUpdatePhysio.setString(4, riziv);
+           pUpdatePhysio.executeUpdate();
+        }
+        catch(SQLException e){
+            throw new DataException("De aangebrachte wijzigingen kunnen niet uitgevoerd worden");
+        }
+    }
+    
+    public void deletePhysio(String riziv) throws DataException{
+        try{
+            pDeletePhysio.setString(1, riziv);
+            pDeletePhysio.executeUpdate();
+        }
+        catch(SQLException e){
+            throw new DataException("Fout bij het verwijderen van deze kinesist");
+        }
+    }
+    
+    public void addExProg(String patientnummer, java.sql.Date datum, String rizivkine) throws DataException {
+        try{
+            int ID = getNewID();
+            pAddExProg.setInt(1, ID);
+            pAddExProg.setInt(2, Integer.parseInt(patientnummer));
+            pAddExProg.setInt(3, getNextVolgnummer(patientnummer));
+            pAddExProg.setDate(4, datum);
+            pAddExProg.setString(5, rizivkine);
+            pAddExProg.executeUpdate();
+        }
+        catch(SQLException e){
+            throw new DataException("Fout bij toevoegen oefenschema in database");
+        }  
+    }
+    
+    public void deleteExProg(String patientnummer, int volgnummer) throws DataException{
+        try{
+            pDeleteExProg.setInt(1, Integer.parseInt(patientnummer));
+            pDeleteExProg.setInt(2, volgnummer);
+            pDeleteExProg.executeUpdate();
+        }
+        catch(SQLException e){
+            throw new DataException("Fout bij het verwijderen van dit oefenschema");
+        }
+    }
+    
+    private int getNewID() throws DataException{
+        try{
+            int ID = 1;
+            ResultSet res = pGetMaxID.executeQuery();
+            while(res.next()){
+                ID = res.getInt("Max") + 1;
+            }
+            res.close();
+            return ID;
+        }
+        catch(SQLException e){
+            throw new DataException("Nieuw ID kan niet bepaald worden");
+        }
+    }
+    
+    private int getNextVolgnummer(String patientnummer) throws DataException {
+        int maxvolgnummer = 0;
+        try{
+            pGetMaxVolgnummer.setString(1, patientnummer);
+            ResultSet res = pGetMaxVolgnummer.executeQuery();
+            while(res.next()){
+                maxvolgnummer = res.getInt("Max") + 1;
+            }
+            return maxvolgnummer;
+            
+        }
+        catch(SQLException e){
+            throw new DataException("");
         }
     }
 }

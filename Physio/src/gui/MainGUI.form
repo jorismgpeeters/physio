@@ -952,39 +952,36 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="kin_riziv">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="jLabel40"/>
-              </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="kin_voornaam">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="jLabel41"/>
-              </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="kin_achternaam">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="jLabel42"/>
-              </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="kin_email">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="jLabel43"/>
-              </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="kin_voegToe">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Voeg toe"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="kin_voegToeActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="kin_wijzig">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Wijzig gegevens"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="kin_wijzigActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="kin_wis">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Wis"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="kin_wisActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

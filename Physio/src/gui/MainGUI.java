@@ -5,13 +5,18 @@
  */
 
 package gui;
+import com.toedter.calendar.JDateChooser;
 import datainterface.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import javax.swing.ComboBoxModel;
 import javax.swing.DefaultListModel;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.ListModel;
 import physio.*;
 
 /**
@@ -39,7 +44,14 @@ public class MainGUI extends javax.swing.JFrame {
         ovz_kin_list.setSelectedIndex(0);
         refreshPatPatientsList();
         pat_list.setSelectedIndex(0);
-    }    
+    } 
+    
+    private void refreshPhysioLists() throws DataException {
+        refreshOvzPhysioList();
+        ovz_kin_list.setSelectedIndex(0);
+        refreshKinPhysiosList();
+        kin_list.setSelectedIndex(0);
+    }
     
     private void refreshOverzichtPanel() throws DataException {
         refreshOvzPatientsList();
@@ -100,7 +112,7 @@ public class MainGUI extends javax.swing.JFrame {
         }
         ovz_ovz_list.setModel(listModel);
     }
-    
+   
     private void clearOvzKinInfo() 
     {
         setOvzKinInfo("","","","");
@@ -759,19 +771,26 @@ public class MainGUI extends javax.swing.JFrame {
 
         jLabel39.setText("Email:");
 
-        kin_riziv.setText("jLabel40");
-
-        kin_voornaam.setText("jLabel41");
-
-        kin_achternaam.setText("jLabel42");
-
-        kin_email.setText("jLabel43");
-
         kin_voegToe.setText("Voeg toe");
+        kin_voegToe.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                kin_voegToeActionPerformed(evt);
+            }
+        });
 
         kin_wijzig.setText("Wijzig gegevens");
+        kin_wijzig.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                kin_wijzigActionPerformed(evt);
+            }
+        });
 
         kin_wis.setText("Wis");
+        kin_wis.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                kin_wisActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout kin_tabLayout = new javax.swing.GroupLayout(kin_tab);
         kin_tab.setLayout(kin_tabLayout);
@@ -950,7 +969,41 @@ public class MainGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_ovz_ovz_listValueChanged
 
     private void ovz_ovz_voegToeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ovz_ovz_voegToeActionPerformed
-        // TODO add your handling code here:
+        try{
+            JDateChooser chooseDate = new JDateChooser(new java.util.Date());    
+            JComboBox choosePhysio = new JComboBox();
+            for(Physio p: admin.getPhysios()){
+                choosePhysio.addItem(p.getVoornaam() + " " + p.getNaam());
+            }
+            choosePhysio.setSelectedIndex(-1);
+            Object[] message = {
+                "Datum:", chooseDate, 
+                "Kinesist:", choosePhysio};
+            int optie = JOptionPane.showOptionDialog(this, message, "Geef gegevens nieuw oefenschema in", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+            if(optie == JOptionPane.OK_OPTION){
+                String patientnummer = null;
+                int index = ovz_pat_list.getSelectedIndex();
+                if (index >= 0) {
+                    Patient p = admin.getPatients().get(index);
+                    patientnummer = p.getNummer();
+                }
+                java.sql.Date datum = null;
+                if(chooseDate.getDate() != null){
+                   datum = new java.sql.Date(chooseDate.getDate().getTime()); 
+                }
+                String rizivkine = null;
+                int indexcombo = choosePhysio.getSelectedIndex();
+                if (indexcombo >= 0) {
+                    Physio p = admin.getPhysios().get(indexcombo);
+                    rizivkine = p.getRiziv();
+                }
+                admin.addExProg(patientnummer, datum, rizivkine);
+                refreshExerciseProgramList(patientnummer);
+            }
+        }    
+        catch(DataException e){
+            JOptionPane.showMessageDialog(this, "Fout bij het invoeren van dit oefenschema");
+        }
     }//GEN-LAST:event_ovz_ovz_voegToeActionPerformed
 
     private void ovz_ovz_wijzigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ovz_ovz_wijzigActionPerformed
@@ -958,7 +1011,18 @@ public class MainGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_ovz_ovz_wijzigActionPerformed
 
     private void ovz_ovz_wisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ovz_ovz_wisActionPerformed
-        // TODO add your handling code here:
+         try{
+            String patientnummer = null;
+            int indexPatient = pat_list.getSelectedIndex();
+            if (indexPatient >= 0) {
+                Patient p = admin.getPatients().get(indexPatient);
+                patientnummer = p.getNummer();
+            }
+            int volgnummer = (int)ovz_ovz_list.getSelectedValue();
+            admin.deleteExProg(patientnummer, volgnummer);
+            refreshExerciseProgramList(patientnummer);
+        }
+        catch(DataException e){}
     }//GEN-LAST:event_ovz_ovz_wisActionPerformed
 
     private void pat_listValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_pat_listValueChanged
@@ -1040,6 +1104,66 @@ public class MainGUI extends javax.swing.JFrame {
         }
         catch(DataException e){}
     }//GEN-LAST:event_pat_wisActionPerformed
+
+    private void kin_voegToeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kin_voegToeActionPerformed
+       try{
+            JTextField inputRiziv = new JTextField();
+            JTextField inputVoornaam = new JTextField();
+            JTextField inputAchternaam = new JTextField();
+            JTextField inputEmail = new JTextField();
+            Object[] message = {
+                "Riziv-nummer:", inputRiziv,
+                "Voornaam:", inputVoornaam,
+                "Achternaam:", inputAchternaam,
+                "Emailadres:", inputEmail
+            };
+            int optie = JOptionPane.showOptionDialog(this, message, "Geef gegevens nieuwe kinesist in", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+            if(optie == JOptionPane.OK_OPTION){
+                admin.addPhysio(inputRiziv.getText(), inputAchternaam.getText(), inputVoornaam.getText(), inputEmail.getText());
+                refreshPhysioLists();
+            }
+        }    
+        catch(DataException e){
+            JOptionPane.showMessageDialog(this, "Fout bij het invoeren van deze kinesist");
+        }
+    }//GEN-LAST:event_kin_voegToeActionPerformed
+
+    private void kin_wijzigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kin_wijzigActionPerformed
+        try{
+            int index = kin_list.getSelectedIndex();
+                if (index >= 0) {
+                    Physio p = admin.getPhysios().get(index);
+                    JTextField inputvoornaam = new JTextField(p.getVoornaam());
+                    JTextField inputachternaam = new JTextField(p.getNaam());
+                    JTextField inputEmail = new JTextField(p.getEmail());
+                    Object[] message = {
+                    "Voornaam:", inputvoornaam,
+                    "Achternaam:", inputachternaam,
+                    "Emailadres:", inputEmail
+                    };
+                    int optie = JOptionPane.showOptionDialog(this, message, "Wijzig gegevens", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+                    if(optie == JOptionPane.OK_OPTION){
+                        admin.updatePhysio(p.getRiziv(), inputachternaam.getText(), inputvoornaam.getText(), inputEmail.getText());
+                        refreshPhysioLists();
+                    }
+                }
+        }
+        catch(DataException e){
+            JOptionPane.showMessageDialog(this, "Fout bij het wijzigen van de gegevens van deze patiënt");
+        }
+    }//GEN-LAST:event_kin_wijzigActionPerformed
+
+    private void kin_wisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kin_wisActionPerformed
+        try{
+            int index = kin_list.getSelectedIndex();
+            if (index >= 0) {
+                Physio p = admin.getPhysios().get(index);
+                admin.deletePhysio(p);
+                refreshPhysioLists();
+            }
+        }
+        catch(DataException e){}
+    }//GEN-LAST:event_kin_wisActionPerformed
 
     /**
      * @param args the command line arguments
