@@ -21,6 +21,7 @@ public class PatientAdmin {
     private ArrayList<Patient> patientlist = null;
     private ArrayList<Physio> physiolist = null;
     private ArrayList<ExerciseProgram> exerciseprogramlist = null;
+    private ArrayList<Exercise> exerciselist = null;
     
     public PatientAdmin() throws DataException{
         //dataInterface = new DataInterface();
@@ -44,6 +45,11 @@ public class PatientAdmin {
             exerciseprogramlist = p.getExercisePrograms();
         }
         return exerciseprogramlist;
+    }
+    
+    public ArrayList<Exercise> getExercises() throws DataException{
+        exerciselist = dataInterface.readAllExercises();
+        return exerciselist;
     }
     
     private Patient getPatient(String patientnummer){
@@ -95,7 +101,7 @@ public class PatientAdmin {
     
     public void deletePhysio(Physio physio) throws DataException{
         String riziv = physio.getRiziv();
-        dataInterface.deletePatient(riziv);
+        dataInterface.deletePhysio(riziv);
         physiolist = dataInterface.readAllPhysios();
     }
     

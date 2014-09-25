@@ -1,6 +1,7 @@
 package datainterface;
 
 import java.io.File;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.sql.*;
 import java.util.*;
@@ -32,8 +33,9 @@ import physio.*;
     private PreparedStatement pUpdatePhysio = null;
     private PreparedStatement pAddExProg = null;
     private PreparedStatement pDeleteExProg = null;
-    private PreparedStatement pGetMaxVolgnummer = null;
-    private PreparedStatement pGetMaxID = null;
+    private PreparedStatement pGetMaxVolgnummerExProg = null;
+    private PreparedStatement pGetMaxIDExProg = null;
+    private PreparedStatement pSelectExercise = null;
     
     /**
      * Establishes the connection to the specific database and initialises the 
@@ -104,12 +106,13 @@ import physio.*;
             pDeletePatient = con.prepareStatement("DELETE FROM Patient WHERE Patientnummer = ?");
             pUpdatePatient = con.prepareStatement("UPDATE Patient SET Naam = ?, Voornaam = ?, Emailadres = ? WHERE Patientnummer = ?");
             pAddPhysio = con.prepareStatement("INSERT INTO Kinesist VALUES (?, ?, ?, ?)");
-            pDeletePatient = con.prepareStatement("DELETE FROM Kinesist WHERE Riziv = ?");
+            pDeletePhysio = con.prepareStatement("DELETE FROM Kinesist WHERE Riziv = ?");
             pUpdatePhysio = con.prepareStatement("UPDATE Kinesist SET Naam = ?, Voornaam = ?, Emailadres = ? WHERE Riziv = ?");
             pAddExProg = con.prepareStatement("INSERT INTO Oefenschema VALUES (?, ?, ?, ?, ?)");
             pDeleteExProg = con.prepareStatement("DELETE FROM Oefenschema WHERE Patient = ? AND Volgnummer = ?");
-            pGetMaxVolgnummer = con.prepareStatement("SELECT max(Volgnummer) FROM Oefenschema WHERE Patient = ?");
-            pGetMaxID = con.prepareStatement("SELECT max(ID) FROM Oefenschema");
+            pGetMaxVolgnummerExProg = con.prepareStatement("SELECT max(Volgnummer) FROM Oefenschema WHERE Patient = ?");
+            pGetMaxIDExProg = con.prepareStatement("SELECT max(ID) FROM Oefenschema");
+            pSelectExercise = con.prepareStatement("SELECT * FROM Oefening");
         }
         catch (SQLException e){
             throw new DataException("Error in creating the SQL-statements");
@@ -207,7 +210,7 @@ import physio.*;
     
     public void deletePatient(String patientnummer) throws DataException{
         try{
-            pDeletePatient.setString(1, patientnummer);
+            pDeletePatient.setInt(1, Integer.parseInt(patientnummer));
             pDeletePatient.executeUpdate();
         }
         catch(SQLException e){
@@ -290,10 +293,35 @@ import physio.*;
         }
     }
     
+    public ArrayList<Exercise> readAllExercises() throws DataException{
+        ArrayList<Exercise> exercises = new ArrayList<>();
+        try{
+            ResultSet res = pSelectExercise.executeQuery();
+            while(res.next()){
+                int ID = res.getInt("Id");
+                String naam = res.getString("Naam");
+                String beginhouding = res.getString("Beginhouding");
+                String instructie = res.getString("Instructie");
+                Blob afbeeldingDB = res.getBlob("Afbeelding");
+                ImageIcon afbeelding = null;
+                if(afbeeldingDB != null){
+                    byte[] afbeeldingByte = afbeeldingDB.getBytes(1L, (int)afbeeldingDB.length());
+                    afbeelding = new ImageIcon(afbeeldingByte);
+                }
+                Exercise exercise = new Exercise(ID, naam, beginhouding, instructie, afbeelding);
+                exercises.add(exercise); 
+            }
+            return exercises;
+        }
+        catch(SQLException e){
+            throw new DataException("Fout bij het opvragen van de oefeningen");
+        }
+    }
+    
     private int getNewID() throws DataException{
         try{
             int ID = 1;
-            ResultSet res = pGetMaxID.executeQuery();
+            ResultSet res = pGetMaxIDExProg.executeQuery();
             while(res.next()){
                 ID = res.getInt("Max") + 1;
             }
@@ -308,8 +336,8 @@ import physio.*;
     private int getNextVolgnummer(String patientnummer) throws DataException {
         int maxvolgnummer = 0;
         try{
-            pGetMaxVolgnummer.setString(1, patientnummer);
-            ResultSet res = pGetMaxVolgnummer.executeQuery();
+            pGetMaxVolgnummerExProg.setString(1, patientnummer);
+            ResultSet res = pGetMaxVolgnummerExProg.executeQuery();
             while(res.next()){
                 maxvolgnummer = res.getInt("Max") + 1;
             }

@@ -7,6 +7,7 @@
 package physio;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 /**
  *
@@ -18,6 +19,7 @@ public class ExerciseProgram {
     private int volgnummer = 0;
     private Date datum = null;
     private Physio physio = null;
+    private ArrayList<Exercise> exercises = null;
     
     public ExerciseProgram(Patient patient, int volgnummer, Date datum, Physio physio){
         this.patient = patient;

@@ -17,6 +17,8 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.ListModel;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import physio.*;
 
 /**
@@ -37,6 +39,7 @@ public class MainGUI extends javax.swing.JFrame {
         refreshOverzichtPanel();
         refreshPatientsPanel();
         refreshPhysiosPanel();
+        refreshExercisesPanel();
     }
     
     private void refreshPatientLists() throws DataException {
@@ -68,7 +71,11 @@ public class MainGUI extends javax.swing.JFrame {
     private void refreshPhysiosPanel() throws DataException {
         refreshKinPhysiosList();
         kin_list.setSelectedIndex(0);
-    }      
+    }
+    
+    private void refreshExercisesPanel() throws DataException{
+        refreshExercisesList();
+    }
     
     private void refreshOvzPatientsList() throws DataException {
         DefaultListModel listModel = new DefaultListModel(); 
@@ -111,8 +118,23 @@ public class MainGUI extends javax.swing.JFrame {
             }
         }
         ovz_ovz_list.setModel(listModel);
+        ovz_ovz_list.setSelectedIndex(listModel.size()-1);
     }
-   
+    
+    private void refreshExercisesList() throws DataException{
+        DefaultTableModel tableModel = new DefaultTableModel(
+            new Object [][] {},
+            new String [] {"Naam", "Foto", "Beginhouding", "Instructie"});
+        ArrayList<Exercise> exerciseList = admin.getExercises();
+        if(exerciseList != null){
+            for(Exercise exercise : exerciseList){
+                tableModel.addRow(new Object[]{exercise.getNaam(), exercise.getAfbeelding(), exercise.getBeginhouding(), exercise.getInstructie()});
+            }
+            oef_table.setModel(tableModel);
+        }
+        
+    }
+    
     private void clearOvzKinInfo() 
     {
         setOvzKinInfo("","","","");
@@ -175,7 +197,7 @@ public class MainGUI extends javax.swing.JFrame {
         kin_achternaam.setText(naam);
         kin_email.setText(email);          
     }    
-    
+   
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -859,16 +881,16 @@ public class MainGUI extends javax.swing.JFrame {
 
         oef_table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Naam", "Foto", "Beginhouding", "Instructie"
             }
         ));
         jScrollPane7.setViewportView(oef_table);
+        if (oef_table.getColumnModel().getColumnCount() > 0) {
+            oef_table.getColumnModel().getColumn(0).setPreferredWidth(2);
+        }
 
         oef_voegToe.setText("Voeg toe");
 
@@ -975,7 +997,7 @@ public class MainGUI extends javax.swing.JFrame {
             for(Physio p: admin.getPhysios()){
                 choosePhysio.addItem(p.getVoornaam() + " " + p.getNaam());
             }
-            choosePhysio.setSelectedIndex(-1);
+            choosePhysio.setSelectedIndex(0);
             Object[] message = {
                 "Datum:", chooseDate, 
                 "Kinesist:", choosePhysio};
@@ -1102,7 +1124,9 @@ public class MainGUI extends javax.swing.JFrame {
                 refreshPatientLists();
             }
         }
-        catch(DataException e){}
+        catch(DataException e){
+            JOptionPane.showMessageDialog(this, "Fout bij het verwijderen van deze patiënt");
+        }
     }//GEN-LAST:event_pat_wisActionPerformed
 
     private void kin_voegToeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kin_voegToeActionPerformed
