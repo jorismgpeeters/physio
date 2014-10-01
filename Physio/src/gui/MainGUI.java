@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -122,13 +123,16 @@ public class MainGUI extends javax.swing.JFrame {
     }
     
     private void refreshExercisesList() throws DataException{
-        DefaultTableModel tableModel = new DefaultTableModel(
+       
+        CustomisedTableModel tableModel = new CustomisedTableModel(
             new Object [][] {},
             new String [] {"Naam", "Foto", "Beginhouding", "Instructie"});
         ArrayList<Exercise> exerciseList = admin.getExercises();
         if(exerciseList != null){
             for(Exercise exercise : exerciseList){
                 tableModel.addRow(new Object[]{exercise.getNaam(), exercise.getAfbeelding(), exercise.getBeginhouding(), exercise.getInstructie()});
+                JLabel picLabel = new JLabel(exercise.getAfbeelding());
+                JOptionPane.showMessageDialog(null, picLabel, "About", JOptionPane.PLAIN_MESSAGE, null);
             }
             oef_table.setModel(tableModel);
         }
@@ -1225,6 +1229,26 @@ public class MainGUI extends javax.swing.JFrame {
             }
         });
     }
+   
+    
+class CustomisedTableModel extends DefaultTableModel {  
+  
+    public CustomisedTableModel(Object rowData[][], Object columnNames[]) {  
+         super(rowData, columnNames);  
+      }  
+     
+    @Override  
+      public Class getColumnClass(int col) {  
+        if (col == 1)  
+            return ImageIcon.class;  
+        else return String.class;
+    }  
+  
+    @Override  
+      public boolean isCellEditable(int row, int col) {  
+        return false;  
+      }  
+    }   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
