@@ -1,5 +1,6 @@
 package datainterface;
 
+import java.awt.Image;
 import java.io.File;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -307,6 +308,9 @@ import physio.*;
                 if(afbeeldingDB != null){
                     byte[] afbeeldingByte = afbeeldingDB.getBytes(1L, (int)afbeeldingDB.length());
                     afbeelding = new ImageIcon(afbeeldingByte);
+                    Image image = afbeelding.getImage();
+                    Image newimg = image.getScaledInstance(120, 120, Image.SCALE_SMOOTH);
+                    afbeelding = new ImageIcon(newimg);
                 }
                 Exercise exercise = new Exercise(ID, naam, beginhouding, instructie, afbeelding);
                 exercises.add(exercise); 
