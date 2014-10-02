@@ -77,6 +77,8 @@ public class MainGUI extends javax.swing.JFrame {
     
     private void refreshExercisesPanel() throws DataException{
         refreshExercisesList();
+        refreshZoneList();
+        refreshTypeList();
     }
     
     private void refreshOvzPatientsList() throws DataException {
@@ -124,7 +126,6 @@ public class MainGUI extends javax.swing.JFrame {
     }
     
     private void refreshExercisesList() throws DataException{
-       
         CustomisedTableModel tableModel = new CustomisedTableModel(
             new Object [][] {},
             new String [] {"Naam", "Foto", "Beginhouding", "Instructie"});
@@ -136,8 +137,31 @@ public class MainGUI extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, picLabel, "About", JOptionPane.PLAIN_MESSAGE, null);
             }
             oef_table.setModel(tableModel);
+        }   
+    }
+    
+    private void refreshZoneList() throws DataException{
+        oef_zoneCombo.removeAllItems();
+        oef_zoneCombo.addItem("Alle");
+        ArrayList<String> zoneList = admin.getZones();
+        if(zoneList != null){
+            for(String zone: zoneList){
+                oef_zoneCombo.addItem(zone);
+            }
         }
-        
+        oef_zoneCombo.setSelectedIndex(0);
+    }
+    
+    private void refreshTypeList() throws DataException{
+        oef_typeCombo.removeAllItems();
+        oef_typeCombo.addItem("Alle");
+        ArrayList<String> typeList = admin.getTypes();
+        if(typeList != null){
+            for(String type: typeList){
+                oef_typeCombo.addItem(type);
+            }
+        }
+        oef_typeCombo.setSelectedIndex(0);
     }
     
     private void clearOvzKinInfo() 
@@ -297,6 +321,10 @@ public class MainGUI extends javax.swing.JFrame {
         jScrollPane8 = new javax.swing.JScrollPane();
         jScrollPane7 = new javax.swing.JScrollPane();
         oef_table = new javax.swing.JTable();
+        oef_zoneCombo = new javax.swing.JComboBox();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        oef_typeCombo = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -545,7 +573,7 @@ public class MainGUI extends javax.swing.JFrame {
                         .addComponent(ovz_ovz_wijzig)
                         .addGap(18, 18, 18)
                         .addComponent(ovz_ovz_wis)))
-                .addContainerGap(174, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         ovz_ovz_panelLayout.setVerticalGroup(
             ovz_ovz_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -726,7 +754,7 @@ public class MainGUI extends javax.swing.JFrame {
                         .addComponent(pat_wijzig)
                         .addGap(18, 18, 18)
                         .addComponent(pat_wis)))
-                .addContainerGap(397, Short.MAX_VALUE))
+                .addContainerGap(383, Short.MAX_VALUE))
         );
         pat_pat_panelLayout.setVerticalGroup(
             pat_pat_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -757,20 +785,20 @@ public class MainGUI extends javax.swing.JFrame {
                             .addComponent(pat_voegToe)
                             .addComponent(pat_wijzig)
                             .addComponent(pat_wis))))
-                .addContainerGap(421, Short.MAX_VALUE))
+                .addContainerGap(385, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout pat_tabLayout = new javax.swing.GroupLayout(pat_tab);
         pat_tab.setLayout(pat_tabLayout);
         pat_tabLayout.setHorizontalGroup(
             pat_tabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 992, Short.MAX_VALUE)
+            .addGap(0, 978, Short.MAX_VALUE)
             .addGroup(pat_tabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(pat_pat_panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pat_tabLayout.setVerticalGroup(
             pat_tabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 680, Short.MAX_VALUE)
+            .addGap(0, 644, Short.MAX_VALUE)
             .addGroup(pat_tabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(pat_pat_panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -849,7 +877,7 @@ public class MainGUI extends javax.swing.JFrame {
                         .addComponent(kin_wijzig)
                         .addGap(18, 18, 18)
                         .addComponent(kin_wis)))
-                .addContainerGap(405, Short.MAX_VALUE))
+                .addContainerGap(391, Short.MAX_VALUE))
         );
         kin_tabLayout.setVerticalGroup(
             kin_tabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -880,7 +908,7 @@ public class MainGUI extends javax.swing.JFrame {
                             .addComponent(kin_wijzig)
                             .addComponent(kin_wis)))
                     .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(508, Short.MAX_VALUE))
+                .addContainerGap(472, Short.MAX_VALUE))
         );
 
         jTabbedPane2.addTab("Kinesisten", kin_tab);
@@ -904,33 +932,58 @@ public class MainGUI extends javax.swing.JFrame {
 
         jScrollPane8.setViewportView(jScrollPane7);
 
+        oef_zoneCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        jLabel12.setText("Selecteer lichaamszone:");
+
+        jLabel13.setText("Selecteer type oefening:");
+
+        oef_typeCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
         javax.swing.GroupLayout oef_tabLayout = new javax.swing.GroupLayout(oef_tab);
         oef_tab.setLayout(oef_tabLayout);
         oef_tabLayout.setHorizontalGroup(
             oef_tabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(oef_tabLayout.createSequentialGroup()
-                .addGap(20, 20, 20)
                 .addGroup(oef_tabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 912, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(oef_tabLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 912, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(oef_tabLayout.createSequentialGroup()
+                        .addGap(33, 33, 33)
+                        .addComponent(oef_wis)
+                        .addGap(18, 18, 18)
                         .addComponent(oef_voegToe)
                         .addGap(18, 18, 18)
-                        .addComponent(oef_wijzig)
+                        .addComponent(oef_wijzig))
+                    .addGroup(oef_tabLayout.createSequentialGroup()
+                        .addGap(22, 22, 22)
+                        .addComponent(jLabel12)
                         .addGap(18, 18, 18)
-                        .addComponent(oef_wis)))
-                .addContainerGap(60, Short.MAX_VALUE))
+                        .addComponent(oef_zoneCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(140, 140, 140)
+                        .addComponent(jLabel13)
+                        .addGap(18, 18, 18)
+                        .addComponent(oef_typeCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(56, Short.MAX_VALUE))
         );
         oef_tabLayout.setVerticalGroup(
             oef_tabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(oef_tabLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(17, 17, 17)
+                .addGroup(oef_tabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel12)
+                    .addComponent(oef_zoneCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel13)
+                    .addComponent(oef_typeCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(33, 33, 33)
                 .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(oef_tabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(oef_wis)
                     .addComponent(oef_voegToe)
-                    .addComponent(oef_wijzig)
-                    .addComponent(oef_wis))
-                .addContainerGap(325, Short.MAX_VALUE))
+                    .addComponent(oef_wijzig))
+                .addContainerGap(230, Short.MAX_VALUE))
         );
 
         jTabbedPane2.addTab("Oefeningen", oef_tab);
@@ -1256,6 +1309,8 @@ class CustomisedTableModel extends DefaultTableModel {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel21;
@@ -1299,9 +1354,11 @@ class CustomisedTableModel extends DefaultTableModel {
     private javax.swing.JButton oef_oef_email;
     private javax.swing.JPanel oef_tab;
     private javax.swing.JTable oef_table;
+    private javax.swing.JComboBox oef_typeCombo;
     private javax.swing.JButton oef_voegToe;
     private javax.swing.JButton oef_wijzig;
     private javax.swing.JButton oef_wis;
+    private javax.swing.JComboBox oef_zoneCombo;
     private javax.swing.JLabel ovz_kin_email;
     private javax.swing.JList ovz_kin_list;
     private javax.swing.JLabel ovz_kin_naam;

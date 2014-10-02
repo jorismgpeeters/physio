@@ -37,6 +37,8 @@ import physio.*;
     private PreparedStatement pGetMaxVolgnummerExProg = null;
     private PreparedStatement pGetMaxIDExProg = null;
     private PreparedStatement pSelectExercise = null;
+    private PreparedStatement pSelectZone = null;
+    private PreparedStatement pSelectType = null;
     
     /**
      * Establishes the connection to the specific database and initialises the 
@@ -114,6 +116,8 @@ import physio.*;
             pGetMaxVolgnummerExProg = con.prepareStatement("SELECT max(Volgnummer) FROM Oefenschema WHERE Patient = ?");
             pGetMaxIDExProg = con.prepareStatement("SELECT max(ID) FROM Oefenschema");
             pSelectExercise = con.prepareStatement("SELECT * FROM Oefening");
+            pSelectZone = con.prepareStatement("SELECT * FROM LOCATIE");
+            pSelectType = con.prepareStatement("SELECT * FROM TYPE");
         }
         catch (SQLException e){
             throw new DataException("Error in creating the SQL-statements");
@@ -319,6 +323,36 @@ import physio.*;
         }
         catch(SQLException e){
             throw new DataException("Fout bij het opvragen van de oefeningen");
+        }
+    }
+    
+    public ArrayList<String> readAllZones() throws DataException{
+        ArrayList<String> zones = new ArrayList<>();
+        try{
+            ResultSet res = pSelectZone.executeQuery();
+            while(res.next()){
+                String zone = res.getString("Naam");
+                zones.add(zone);
+            }
+            return zones;
+        }
+        catch(SQLException e){
+            throw new DataException("Fout bij het opvragen van de lichaamszones");
+        }
+    }
+    
+    public ArrayList<String> readAllTypes() throws DataException{
+        ArrayList<String> types = new ArrayList<>();
+        try{
+            ResultSet res = pSelectType.executeQuery();
+            while(res.next()){
+                String type = res.getString("Naam");
+                types.add(type);
+            }
+            return types;
+        }
+        catch(SQLException e){
+            throw new DataException("Fout bij het opvragen van de oefeningtypes");
         }
     }
     

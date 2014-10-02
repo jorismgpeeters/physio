@@ -22,6 +22,8 @@ public class PatientAdmin {
     private ArrayList<Physio> physiolist = null;
     private ArrayList<ExerciseProgram> exerciseprogramlist = null;
     private ArrayList<Exercise> exerciselist = null;
+    private ArrayList<String> zonelist = null;
+    private ArrayList<String> typelist = null;
     
     public PatientAdmin() throws DataException{
         //dataInterface = new DataInterface();
@@ -50,6 +52,16 @@ public class PatientAdmin {
     public ArrayList<Exercise> getExercises() throws DataException{
         exerciselist = dataInterface.readAllExercises();
         return exerciselist;
+    }
+    
+    public ArrayList<String> getZones() throws DataException{
+        zonelist = dataInterface.readAllZones();
+        return zonelist;
+    }
+    
+    public ArrayList<String> getTypes() throws DataException{
+        typelist = dataInterface.readAllTypes();
+        return typelist;
     }
     
     private Patient getPatient(String patientnummer){
