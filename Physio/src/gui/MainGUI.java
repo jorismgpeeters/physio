@@ -602,6 +602,11 @@ public class MainGUI extends javax.swing.JFrame {
         ovz_oef_panel.setBorder(javax.swing.BorderFactory.createTitledBorder("Oefenschema"));
 
         ovz_oef_voegToe.setText("Voeg oefening toe");
+        ovz_oef_voegToe.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ovz_oef_voegToeActionPerformed(evt);
+            }
+        });
 
         ovz_oef_verwijder.setText("Verwijder oefening");
 
@@ -1247,6 +1252,10 @@ public class MainGUI extends javax.swing.JFrame {
         }
         catch(DataException e){}
     }//GEN-LAST:event_kin_wisActionPerformed
+
+    private void ovz_oef_voegToeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ovz_oef_voegToeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ovz_oef_voegToeActionPerformed
 
     /**
      * @param args the command line arguments
