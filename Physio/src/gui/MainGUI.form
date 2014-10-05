@@ -1007,12 +1007,12 @@
                               <Component id="jScrollPane8" min="-2" pref="912" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
-                              <Component id="oef_wis" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
+                              <Component id="oef_detail" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="oef_voegToe" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="oef_wijzig" min="-2" max="-2" attributes="0"/>
+                              <Component id="oef_wis" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
@@ -1045,7 +1045,7 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="oef_wis" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="oef_voegToe" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="oef_wijzig" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="oef_detail" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace pref="230" max="32767" attributes="0"/>
                   </Group>
@@ -1056,11 +1056,6 @@
             <Component class="javax.swing.JButton" name="oef_voegToe">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Voeg toe"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JButton" name="oef_wijzig">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Wijzig oefening"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="oef_wis">
@@ -1134,6 +1129,9 @@
                   </StringArray>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="oef_zoneComboItemStateChanged"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel12">
               <Properties>
@@ -1155,6 +1153,14 @@
                     <StringItem index="3" value="Item 4"/>
                   </StringArray>
                 </Property>
+              </Properties>
+              <Events>
+                <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="oef_typeComboItemStateChanged"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JButton" name="oef_detail">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Detail oefening"/>
               </Properties>
             </Component>
           </SubComponents>

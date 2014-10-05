@@ -39,6 +39,9 @@ import physio.*;
     private PreparedStatement pSelectExercise = null;
     private PreparedStatement pSelectZone = null;
     private PreparedStatement pSelectType = null;
+    private PreparedStatement pSelectExerciseFilterZone = null;
+    private PreparedStatement pSelectExerciseFilterType = null;
+    private PreparedStatement pSelectExerciseFilterZoneType = null;
     
     /**
      * Establishes the connection to the specific database and initialises the 
@@ -116,8 +119,11 @@ import physio.*;
             pGetMaxVolgnummerExProg = con.prepareStatement("SELECT max(Volgnummer) FROM Oefenschema WHERE Patient = ?");
             pGetMaxIDExProg = con.prepareStatement("SELECT max(ID) FROM Oefenschema");
             pSelectExercise = con.prepareStatement("SELECT * FROM Oefening");
-            pSelectZone = con.prepareStatement("SELECT * FROM LOCATIE");
-            pSelectType = con.prepareStatement("SELECT * FROM TYPE");
+            pSelectZone = con.prepareStatement("SELECT * FROM Locatie");
+            pSelectType = con.prepareStatement("SELECT * FROM Type");
+            pSelectExerciseFilterZone = con.prepareStatement("SELECT * FROM Oefening join OefeningLocatie on Oefening.ID = OefeningLocatie.Oefening WHERE OefeningLocatie.Locatie = ?");
+            pSelectExerciseFilterType = con.prepareStatement("SELECT * FROM Oefening join OefeningType on Oefening.ID = OefeningType.Oefening WHERE OefeningType.Type = ?");
+            pSelectExerciseFilterZoneType = con.prepareStatement("SELECT * FROM Oefening join OefeningLocatie on Oefening.ID = OefeningLocatie.Oefening join OefeningType on Oefening.ID = OefeningType.Oefening WHERE OefeningLocatie.Locatie = ? AND OefeningType.Type = ?");
         }
         catch (SQLException e){
             throw new DataException("Error in creating the SQL-statements");
@@ -325,6 +331,11 @@ import physio.*;
             throw new DataException("Fout bij het opvragen van de oefeningen");
         }
     }
+    
+    //public ArrayList<Exercise> readFilteredExercises(String locatie, String type) throws DataException{
+    //    ArrayList<Exercise> exercises = new ArrayList<>();
+        
+    //}
     
     public ArrayList<String> readAllZones() throws DataException{
         ArrayList<String> zones = new ArrayList<>();

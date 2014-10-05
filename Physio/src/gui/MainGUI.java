@@ -133,8 +133,6 @@ public class MainGUI extends javax.swing.JFrame {
         if(exerciseList != null){
             for(Exercise exercise : exerciseList){
                 tableModel.addRow(new Object[]{exercise.getNaam(), exercise.getAfbeelding(), exercise.getBeginhouding(), exercise.getInstructie()});
-                JLabel picLabel = new JLabel(exercise.getAfbeelding());
-                JOptionPane.showMessageDialog(null, picLabel, "About", JOptionPane.PLAIN_MESSAGE, null);
             }
             oef_table.setModel(tableModel);
         }   
@@ -316,7 +314,6 @@ public class MainGUI extends javax.swing.JFrame {
         kin_wis = new javax.swing.JButton();
         oef_tab = new javax.swing.JPanel();
         oef_voegToe = new javax.swing.JButton();
-        oef_wijzig = new javax.swing.JButton();
         oef_wis = new javax.swing.JButton();
         jScrollPane8 = new javax.swing.JScrollPane();
         jScrollPane7 = new javax.swing.JScrollPane();
@@ -325,6 +322,7 @@ public class MainGUI extends javax.swing.JFrame {
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
         oef_typeCombo = new javax.swing.JComboBox();
+        oef_detail = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -920,8 +918,6 @@ public class MainGUI extends javax.swing.JFrame {
 
         oef_voegToe.setText("Voeg toe");
 
-        oef_wijzig.setText("Wijzig oefening");
-
         oef_wis.setText("Wis");
 
         oef_table.setModel(new javax.swing.table.DefaultTableModel(
@@ -938,12 +934,24 @@ public class MainGUI extends javax.swing.JFrame {
         jScrollPane8.setViewportView(jScrollPane7);
 
         oef_zoneCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        oef_zoneCombo.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                oef_zoneComboItemStateChanged(evt);
+            }
+        });
 
         jLabel12.setText("Selecteer lichaamszone:");
 
         jLabel13.setText("Selecteer type oefening:");
 
         oef_typeCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        oef_typeCombo.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                oef_typeComboItemStateChanged(evt);
+            }
+        });
+
+        oef_detail.setText("Detail oefening");
 
         javax.swing.GroupLayout oef_tabLayout = new javax.swing.GroupLayout(oef_tab);
         oef_tab.setLayout(oef_tabLayout);
@@ -955,12 +963,12 @@ public class MainGUI extends javax.swing.JFrame {
                         .addContainerGap()
                         .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 912, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(oef_tabLayout.createSequentialGroup()
-                        .addGap(33, 33, 33)
-                        .addComponent(oef_wis)
+                        .addGap(26, 26, 26)
+                        .addComponent(oef_detail)
                         .addGap(18, 18, 18)
                         .addComponent(oef_voegToe)
                         .addGap(18, 18, 18)
-                        .addComponent(oef_wijzig))
+                        .addComponent(oef_wis))
                     .addGroup(oef_tabLayout.createSequentialGroup()
                         .addGap(22, 22, 22)
                         .addComponent(jLabel12)
@@ -987,7 +995,7 @@ public class MainGUI extends javax.swing.JFrame {
                 .addGroup(oef_tabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(oef_wis)
                     .addComponent(oef_voegToe)
-                    .addComponent(oef_wijzig))
+                    .addComponent(oef_detail))
                 .addContainerGap(230, Short.MAX_VALUE))
         );
 
@@ -1257,6 +1265,23 @@ public class MainGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_ovz_oef_voegToeActionPerformed
 
+    private void oef_zoneComboItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_oef_zoneComboItemStateChanged
+        //try{
+        //    int index = oef_zoneCombo.getSelectedIndex();
+        //    if(index <= 0){
+        //        refreshExercisesList();
+        //    }
+        //    else{
+        //        String locatie = (String)oef_zoneCombo.getItemAt(index);
+        //    }
+        //}
+        //catch(DataException e){}
+    }//GEN-LAST:event_oef_zoneComboItemStateChanged
+
+    private void oef_typeComboItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_oef_typeComboItemStateChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_oef_typeComboItemStateChanged
+
     /**
      * @param args the command line arguments
      */
@@ -1360,12 +1385,12 @@ class CustomisedTableModel extends DefaultTableModel {
     private javax.swing.JLabel kin_voornaam;
     private javax.swing.JButton kin_wijzig;
     private javax.swing.JButton kin_wis;
+    private javax.swing.JButton oef_detail;
     private javax.swing.JButton oef_oef_email;
     private javax.swing.JPanel oef_tab;
     private javax.swing.JTable oef_table;
     private javax.swing.JComboBox oef_typeCombo;
     private javax.swing.JButton oef_voegToe;
-    private javax.swing.JButton oef_wijzig;
     private javax.swing.JButton oef_wis;
     private javax.swing.JComboBox oef_zoneCombo;
     private javax.swing.JLabel ovz_kin_email;
