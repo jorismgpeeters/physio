@@ -1077,11 +1077,10 @@
                     <Component class="javax.swing.JTable" name="oef_table">
                       <Properties>
                         <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                          <Table columnCount="4" rowCount="0">
+                          <Table columnCount="3" rowCount="0">
                             <Column editable="true" title="Naam" type="java.lang.Object"/>
                             <Column editable="true" title="Foto" type="java.lang.Object"/>
-                            <Column editable="true" title="Beginhouding" type="java.lang.Object"/>
-                            <Column editable="true" title="Instructie" type="java.lang.Object"/>
+                            <Column editable="true" title="Moeilijkheidsgraad" type="java.lang.Object"/>
                           </Table>
                         </Property>
                         <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -1091,12 +1090,7 @@
                               <Editor/>
                               <Renderer/>
                             </Column>
-                            <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                              <Title/>
-                              <Editor/>
-                              <Renderer/>
-                            </Column>
-                            <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                            <Column maxWidth="70" minWidth="60" prefWidth="70" resizable="true">
                               <Title/>
                               <Editor/>
                               <Renderer/>
@@ -1108,7 +1102,7 @@
                             </Column>
                           </TableColumnModel>
                         </Property>
-                        <Property name="rowHeight" type="int" value="120"/>
+                        <Property name="rowHeight" type="int" value="60"/>
                         <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
                           <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
                         </Property>

@@ -319,7 +319,7 @@ import physio.*;
                     byte[] afbeeldingByte = afbeeldingDB.getBytes(1L, (int)afbeeldingDB.length());
                     afbeelding = new ImageIcon(afbeeldingByte);
                     Image image = afbeelding.getImage();
-                    Image newimg = image.getScaledInstance(120, 120, Image.SCALE_SMOOTH);
+                    Image newimg = image.getScaledInstance(60, 60, Image.SCALE_SMOOTH);
                     afbeelding = new ImageIcon(newimg);
                 }
                 Exercise exercise = new Exercise(ID, naam, beginhouding, instructie, afbeelding);
@@ -331,11 +331,54 @@ import physio.*;
             throw new DataException("Fout bij het opvragen van de oefeningen");
         }
     }
-    
-    //public ArrayList<Exercise> readFilteredExercises(String locatie, String type) throws DataException{
-    //    ArrayList<Exercise> exercises = new ArrayList<>();
-        
-    //}
+
+    public ArrayList<Exercise> readFilteredExercises(String locatie, String type) throws DataException{
+        ArrayList<Exercise> exercises = new ArrayList<>();
+        ResultSet res = null;
+        try{
+            if(locatie == null){
+                if(type == null){
+                    res = pSelectExercise.executeQuery(); 
+                }
+                else{
+                    pSelectExerciseFilterType.setString(1, type);
+                    res = pSelectExerciseFilterType.executeQuery();
+                }
+            }
+            else{ 
+                if(type == null){
+                    pSelectExerciseFilterZone.setString(1, locatie);
+                    res = pSelectExerciseFilterZone.executeQuery();
+                }
+                else{
+                    pSelectExerciseFilterZoneType.setString(1, locatie);
+                    pSelectExerciseFilterZoneType.setString(2, type);
+                    res = pSelectExerciseFilterZoneType.executeQuery();
+                }
+            }        
+            while(res.next()){
+                int ID = res.getInt("Id");
+                String naam = res.getString("Naam");
+                String beginhouding = res.getString("Beginhouding");
+                String instructie = res.getString("Instructie");
+                Blob afbeeldingDB = res.getBlob("Afbeelding");
+                ImageIcon afbeelding = null;
+                if(afbeeldingDB != null){
+                    byte[] afbeeldingByte = afbeeldingDB.getBytes(1L, (int)afbeeldingDB.length());
+                    afbeelding = new ImageIcon(afbeeldingByte);
+                    Image image = afbeelding.getImage();
+                    Image newimg = image.getScaledInstance(60, 60, Image.SCALE_SMOOTH);
+                    afbeelding = new ImageIcon(newimg);
+                }
+                Exercise exercise = new Exercise(ID, naam, beginhouding, instructie, afbeelding);
+                exercises.add(exercise); 
+            }
+            return exercises;
+        }
+        catch(SQLException e){
+            throw new DataException("Fout bij het opvragen van de oefeningen");
+        }
+    }
     
     public ArrayList<String> readAllZones() throws DataException{
         ArrayList<String> zones = new ArrayList<>();

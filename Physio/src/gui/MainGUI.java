@@ -128,14 +128,41 @@ public class MainGUI extends javax.swing.JFrame {
     private void refreshExercisesList() throws DataException{
         CustomisedTableModel tableModel = new CustomisedTableModel(
             new Object [][] {},
-            new String [] {"Naam", "Foto", "Beginhouding", "Instructie"});
+            new String [] {"Foto", "Naam", "Moeilijkheidsgraad"});
         ArrayList<Exercise> exerciseList = admin.getExercises();
         if(exerciseList != null){
             for(Exercise exercise : exerciseList){
-                tableModel.addRow(new Object[]{exercise.getNaam(), exercise.getAfbeelding(), exercise.getBeginhouding(), exercise.getInstructie()});
+                tableModel.addRow(new Object[]{exercise.getAfbeelding(), exercise.getNaam()});
             }
             oef_table.setModel(tableModel);
+            oef_table.setRowHeight(70);
+            oef_table.getColumnModel().getColumn(0).setMinWidth(80);
+            oef_table.getColumnModel().getColumn(0).setMaxWidth(120);
+            oef_table.getColumnModel().getColumn(0).setPreferredWidth(100);
+            oef_table.getColumnModel().getColumn(1).setMinWidth(200);
+            oef_table.getColumnModel().getColumn(1).setMaxWidth(400);
+            oef_table.getColumnModel().getColumn(1).setPreferredWidth(300);
         }   
+    }
+    
+    private void refreshExercisesFiltered(String locatie, String type) throws DataException{
+        CustomisedTableModel tableModel = new CustomisedTableModel(
+            new Object [][] {},
+            new String [] {"Foto", "Naam", "Moelijkheidsgraad"});
+        ArrayList<Exercise> exerciseList = admin.getExercisesFiltered(locatie, type);
+        if(exerciseList != null){
+            for(Exercise exercise : exerciseList){
+                tableModel.addRow(new Object[]{exercise.getAfbeelding(), exercise.getNaam()});
+            }
+            oef_table.setModel(tableModel);
+            oef_table.setRowHeight(70);
+            oef_table.getColumnModel().getColumn(0).setMinWidth(80);
+            oef_table.getColumnModel().getColumn(0).setMaxWidth(120);
+            oef_table.getColumnModel().getColumn(0).setPreferredWidth(100);
+            oef_table.getColumnModel().getColumn(1).setMinWidth(200);
+            oef_table.getColumnModel().getColumn(1).setMaxWidth(400);
+            oef_table.getColumnModel().getColumn(1).setPreferredWidth(300);
+        }
     }
     
     private void refreshZoneList() throws DataException{
@@ -925,11 +952,16 @@ public class MainGUI extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Naam", "Foto", "Beginhouding", "Instructie"
+                "Naam", "Foto", "Moeilijkheidsgraad"
             }
         ));
-        oef_table.setRowHeight(120);
+        oef_table.setRowHeight(60);
         jScrollPane7.setViewportView(oef_table);
+        if (oef_table.getColumnModel().getColumnCount() > 0) {
+            oef_table.getColumnModel().getColumn(1).setMinWidth(60);
+            oef_table.getColumnModel().getColumn(1).setPreferredWidth(70);
+            oef_table.getColumnModel().getColumn(1).setMaxWidth(70);
+        }
 
         jScrollPane8.setViewportView(jScrollPane7);
 
@@ -1266,20 +1298,55 @@ public class MainGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_ovz_oef_voegToeActionPerformed
 
     private void oef_zoneComboItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_oef_zoneComboItemStateChanged
-        //try{
-        //    int index = oef_zoneCombo.getSelectedIndex();
-        //    if(index <= 0){
-        //        refreshExercisesList();
-        //    }
-        //    else{
-        //        String locatie = (String)oef_zoneCombo.getItemAt(index);
-        //    }
-        //}
-        //catch(DataException e){}
+        try{
+            int indexZone = oef_zoneCombo.getSelectedIndex();
+            String locatie = (String)oef_zoneCombo.getSelectedItem();
+            int indexType = oef_typeCombo.getSelectedIndex();
+            String type = (String)oef_typeCombo.getSelectedItem();
+            if(indexZone <= 0){
+                if(indexType <= 0){
+                    refreshExercisesFiltered(null, null);
+                }
+                else{
+                    refreshExercisesFiltered(null, type);
+                }
+            }
+            else{
+                if(indexType <= 0){
+                    refreshExercisesFiltered(locatie, null);
+                }
+                else{
+                    refreshExercisesFiltered(locatie, type);
+                }
+            }
+        }
+        catch(DataException e){}
     }//GEN-LAST:event_oef_zoneComboItemStateChanged
 
     private void oef_typeComboItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_oef_typeComboItemStateChanged
-        // TODO add your handling code here:
+        try{
+            int indexZone = oef_zoneCombo.getSelectedIndex();
+            String locatie = (String)oef_zoneCombo.getSelectedItem();
+            int indexType = oef_typeCombo.getSelectedIndex();
+            String type = (String)oef_typeCombo.getSelectedItem();
+            if(indexZone <= 0){
+                if(indexType <= 0){
+                    refreshExercisesFiltered(null, null);
+                }
+                else{
+                    refreshExercisesFiltered(null, type);
+                }
+            }
+            else{
+                if(indexType <= 0){
+                    refreshExercisesFiltered(locatie, null);
+                }
+                else{
+                    refreshExercisesFiltered(locatie, type);
+                }
+            }
+        }
+        catch(DataException e){}
     }//GEN-LAST:event_oef_typeComboItemStateChanged
 
     /**
@@ -1328,7 +1395,7 @@ class CustomisedTableModel extends DefaultTableModel {
      
     @Override  
       public Class getColumnClass(int col) {  
-        if (col == 1)  
+        if (col == 0)  
             return ImageIcon.class;  
         else return String.class;
     }  

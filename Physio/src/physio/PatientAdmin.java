@@ -54,6 +54,11 @@ public class PatientAdmin {
         return exerciselist;
     }
     
+    public ArrayList<Exercise> getExercisesFiltered(String locatie, String type) throws DataException{
+        exerciselist = dataInterface.readFilteredExercises(locatie, type);
+        return exerciselist;
+    }
+    
     public ArrayList<String> getZones() throws DataException{
         zonelist = dataInterface.readAllZones();
         return zonelist;
