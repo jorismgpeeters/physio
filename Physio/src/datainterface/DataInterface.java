@@ -9,6 +9,7 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import physio.*;
+import configuration.*;
 
 /**
  * Class responsible for communication with the database
@@ -85,7 +86,13 @@ import physio.*;
         
         if (pathname == null)
         {
-            pathname = getPathFromDialog();
+            try {
+                Configuration cfg = new Configuration();
+                pathname = cfg.getDatabase();
+            }
+            catch (Exception e) {
+                pathname = getPathFromDialog();
+            }
         }
 
         url = url + pathname;
