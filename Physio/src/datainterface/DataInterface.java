@@ -88,7 +88,12 @@ import configuration.*;
         {
             try {
                 Configuration cfg = new Configuration();
-                pathname = cfg.getDatabase();
+                String pathTest = cfg.getDatabase();
+                File f = new File(pathTest);
+                
+                if (f.exists())
+                    pathname = cfg.getDatabase();
+                else throw new Exception("Selected database file does not exist.");
             }
             catch (Exception e) {
                 pathname = getPathFromDialog();

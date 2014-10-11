@@ -16,8 +16,16 @@ public class Configuration {
     
     private String dataBaseKey = "dataBase";
     
-    public String getDatabase() {
-        return System.getProperty("user.dir") + "\\" + getArgument(dataBaseKey);        
+    public String getDatabase() throws IOException {
+        String file = getArgument(dataBaseKey);
+        
+        if (file != null)
+        {
+            return System.getProperty("user.dir") + "\\" + getArgument(dataBaseKey); 
+        } else
+        {
+            throw new IOException("Error obtaining database file.");
+        }
     }
     
     private String getArgument(String key)
@@ -41,7 +49,7 @@ public class Configuration {
 
             return null;
         }
-        catch (IOException e){
+        catch (Exception e){
             return null;
         }
     }
