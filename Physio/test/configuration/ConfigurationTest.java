@@ -42,7 +42,7 @@ public class ConfigurationTest {
      * Test of getDatabase method, of class Configuration.
      */
     @Test
-    public void testGetDatabase() {
+    public void testGetDatabase() throws Exception {
         System.out.println("getDatabase");
         Configuration instance = new Configuration();
         String expResult = System.getProperty("user.dir") + "\\" + "HomePhysioDB.fdb";
