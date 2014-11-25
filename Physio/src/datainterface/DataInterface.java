@@ -43,6 +43,7 @@ import configuration.*;
     private PreparedStatement pSelectExerciseFilterZone = null;
     private PreparedStatement pSelectExerciseFilterType = null;
     private PreparedStatement pSelectExerciseFilterZoneType = null;
+    private PreparedStatement pSelectPatientByPhysio = null;
     
     /**
      * Establishes the connection to the specific database and initialises the 
@@ -136,6 +137,7 @@ import configuration.*;
             pSelectExerciseFilterZone = con.prepareStatement("SELECT * FROM Oefening join OefeningLocatie on Oefening.ID = OefeningLocatie.Oefening WHERE OefeningLocatie.Locatie = ?");
             pSelectExerciseFilterType = con.prepareStatement("SELECT * FROM Oefening join OefeningType on Oefening.ID = OefeningType.Oefening WHERE OefeningType.Type = ?");
             pSelectExerciseFilterZoneType = con.prepareStatement("SELECT * FROM Oefening join OefeningLocatie on Oefening.ID = OefeningLocatie.Oefening join OefeningType on Oefening.ID = OefeningType.Oefening WHERE OefeningLocatie.Locatie = ? AND OefeningType.Type = ?");
+            pSelectPatientByPhysio = con.prepareStatement("SELECT DISTINCT Patientnummer, Naam, Voornaam, Emailadres FROM Oefenschema join Patient on Oefenschema.patient = Patient.patientnummer WHERE Kinesist = ? ORDER BY Naam, Voornaam");
         }
         catch (SQLException e){
             throw new DataException("Error in creating the SQL-statements");
@@ -168,6 +170,28 @@ import configuration.*;
             }
         }
         catch (SQLException e){  
+        }
+        finally{
+            return result;
+        }
+    }
+    
+    public ArrayList<Patient> readPatientsByPhysio(String riziv) throws DataException{
+        ArrayList<Patient> result = new ArrayList<>();
+        try{
+           pSelectPatientByPhysio.setString(1, riziv);
+           ResultSet res = pSelectPatientByPhysio.executeQuery();
+           while(res.next()){
+               String patientnummer = "" + res.getInt("patientnummer");
+               String naam = res.getString("naam");
+               String voornaam = res.getString("voornaam");
+               String email = res.getString("emailadres");
+               Patient pt = new Patient(patientnummer, voornaam, naam, email);
+               result.add(pt); 
+           }
+        }
+        catch(SQLException e){
+            throw new DataException("Probleem met inlezen patienten per kinesist");
         }
         finally{
             return result;

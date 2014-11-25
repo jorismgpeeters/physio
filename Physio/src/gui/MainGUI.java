@@ -25,11 +25,12 @@ import physio.*;
 
 /**
  *
- * @author Lieselotte
+ * @author Lieven & Joris
  */
 public class MainGUI extends javax.swing.JFrame {
     
     private PatientAdmin admin = null;
+    private boolean PhysioSelection = false;
 
     /**
      * Creates new form NewJFrame
@@ -46,7 +47,7 @@ public class MainGUI extends javax.swing.JFrame {
     
     private void refreshPatientLists() throws DataException {
         refreshOvzPatientsList();
-        ovz_kin_list.setSelectedIndex(0);
+        ovz_pat_list.setSelectedIndex(0);
         refreshPatPatientsList();
         pat_list.setSelectedIndex(0);
     } 
@@ -60,9 +61,9 @@ public class MainGUI extends javax.swing.JFrame {
     
     private void refreshOverzichtPanel() throws DataException {
         refreshOvzPatientsList();
-        ovz_kin_list.setSelectedIndex(0);
-        refreshOvzPhysioList();
         ovz_pat_list.setSelectedIndex(0);
+        refreshOvzPhysioList();
+        ovz_kin_list.setSelectedIndex(0);
     }
     
     private void refreshPatientsPanel() throws DataException {
@@ -89,8 +90,17 @@ public class MainGUI extends javax.swing.JFrame {
         ovz_pat_list.setModel(listModel); 
     }
     
+    private void refreshOvzPatientsListByPhysio(String riziv) throws DataException {
+        DefaultListModel listModel = new DefaultListModel();
+        for (Patient p : admin.getPatientsByPhysio(riziv)){
+            listModel.addElement(p.getVoornaam() + " " + p.getAchternaam());
+        }
+        ovz_pat_list.setModel(listModel);
+    }
+    
     private void refreshOvzPhysioList() throws DataException{
         DefaultListModel listModel = new DefaultListModel();
+        listModel.addElement("Alle");
         for (Physio p : admin.getPhysios()){
             listModel.addElement(p.getVoornaam() + " " + p.getNaam());
         }
@@ -1050,27 +1060,54 @@ public class MainGUI extends javax.swing.JFrame {
     private void ovz_kin_listValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_ovz_kin_listValueChanged
         clearOvzKinInfo();
         // Get physio associated with this selection event
-        int index = ovz_kin_list.getSelectedIndex();
+        int index = ovz_kin_list.getSelectedIndex() - 1;
         if (index >= 0) {
             Physio p = admin.getPhysios().get(index);
             setOvzKinInfo(p.getRiziv(), p.getVoornaam(), p.getNaam(), p.getEmail());
-        }      
+            try{
+                refreshOvzPatientsListByPhysio(p.getRiziv());
+                ovz_pat_list.setSelectedIndex(0);  
+                PhysioSelection = true;
+            }
+            catch(DataException e){};
+        }
+        else{
+            try{
+                refreshOvzPatientsList();
+                ovz_pat_list.setSelectedIndex(0);
+                PhysioSelection = false;
+            }
+            catch(DataException e){};
+        }
     }//GEN-LAST:event_ovz_kin_listValueChanged
 
     private void ovz_pat_listValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_ovz_pat_listValueChanged
         clearOvzPatInfo();
         // Get patient associated with this selection event
         int index = ovz_pat_list.getSelectedIndex();
-        if (index >= 0) {
-            Patient p = admin.getPatients().get(index);
-            setOvzPatInfo(p.getNummer(), p.getVoornaam(), p.getAchternaam(), p.getEmailadres());
-            
-            try{
-                refreshExerciseProgramList(p.getNummer());
-                ovz_ovz_list.setSelectedIndex(0);
+        if (!PhysioSelection){
+            if (index >= 0) {
+                Patient p = admin.getPatients().get(index);
+                setOvzPatInfo(p.getNummer(), p.getVoornaam(), p.getAchternaam(), p.getEmailadres());
+                try{
+                    refreshExerciseProgramList(p.getNummer());
+                    ovz_ovz_list.setSelectedIndex(0);
+                }
+                catch (DataException e){};            
             }
-            catch (DataException e){};            
-        }     
+        }
+        else{
+            if (index >= 0) {
+                try{
+                    Patient p = admin.getPatientlistByPhysio().get(index);
+                    setOvzPatInfo(p.getNummer(), p.getVoornaam(), p.getAchternaam(), p.getEmailadres());
+                    refreshExerciseProgramList(p.getNummer());
+                    ovz_ovz_list.setSelectedIndex(0);
+                }
+                catch (DataException e){};
+            }
+        }
+          
     }//GEN-LAST:event_ovz_pat_listValueChanged
 
     private void ovz_ovz_listValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_ovz_ovz_listValueChanged
@@ -1079,18 +1116,34 @@ public class MainGUI extends javax.swing.JFrame {
         if(!ovz_ovz_list.isSelectionEmpty()){
             
             int volgnummer = (Integer)ovz_ovz_list.getSelectedValue();
-            int index = ovz_pat_list.getSelectedIndex();
-            Patient p = admin.getPatients().get(index);
-            String pNummer = p.getNummer();
-            SimpleDateFormat sf = new SimpleDateFormat("dd-MM-yyyy");
-            try{
-                ExerciseProgram exprog = admin.getExerciseProgramDetail(pNummer, volgnummer);
-                String datum = sf.format(exprog.getDatum());
-                Physio physio = exprog.getPhysio();
-                String fullName = physio.getVoornaam() + " " + physio.getNaam();
-                setOvzOvzInfo(datum, fullName);
+            if(!PhysioSelection){
+                int index = ovz_pat_list.getSelectedIndex();
+                Patient p = admin.getPatients().get(index);
+                String pNummer = p.getNummer();
+                SimpleDateFormat sf = new SimpleDateFormat("dd-MM-yyyy");
+                try{
+                    ExerciseProgram exprog = admin.getExerciseProgramDetail(pNummer, volgnummer);
+                    String datum = sf.format(exprog.getDatum());
+                    Physio physio = exprog.getPhysio();
+                    String fullName = physio.getVoornaam() + " " + physio.getNaam();
+                    setOvzOvzInfo(datum, fullName);
+                }
+                catch (DataException e){};
             }
-            catch (DataException e){};
+            else{
+                int index = ovz_pat_list.getSelectedIndex();
+                try{
+                    Patient p = admin.getPatientlistByPhysio().get(index);
+                    String pNummer = p.getNummer();
+                    SimpleDateFormat sf = new SimpleDateFormat("dd-MM-yyyy");
+                    ExerciseProgram exprog = admin.getExerciseProgramDetail(pNummer, volgnummer);
+                    String datum = sf.format(exprog.getDatum());
+                    Physio physio = exprog.getPhysio();
+                    String fullName = physio.getVoornaam() + " " + physio.getNaam();
+                    setOvzOvzInfo(datum, fullName);
+                }
+                catch (DataException e){};
+            }
         }        
     }//GEN-LAST:event_ovz_ovz_listValueChanged
 
@@ -1109,9 +1162,17 @@ public class MainGUI extends javax.swing.JFrame {
             if(optie == JOptionPane.OK_OPTION){
                 String patientnummer = null;
                 int index = ovz_pat_list.getSelectedIndex();
-                if (index >= 0) {
-                    Patient p = admin.getPatients().get(index);
-                    patientnummer = p.getNummer();
+                if(!PhysioSelection){
+                    if (index >= 0) {
+                        Patient p = admin.getPatients().get(index);
+                        patientnummer = p.getNummer();
+                    }
+                }    
+                else{
+                    if (index >= 0) {
+                        Patient p = admin.getPatientlistByPhysio().get(index);
+                        patientnummer = p.getNummer();
+                    }
                 }
                 java.sql.Date datum = null;
                 if(chooseDate.getDate() != null){
@@ -1140,9 +1201,17 @@ public class MainGUI extends javax.swing.JFrame {
          try{
             String patientnummer = null;
             int indexPatient = pat_list.getSelectedIndex();
-            if (indexPatient >= 0) {
-                Patient p = admin.getPatients().get(indexPatient);
-                patientnummer = p.getNummer();
+            if(!PhysioSelection){
+                if (indexPatient >= 0) {
+                    Patient p = admin.getPatients().get(indexPatient);
+                    patientnummer = p.getNummer();
+                }
+            }
+            else{
+                if (indexPatient >= 0) {
+                    Patient p = admin.getPatientlistByPhysio().get(indexPatient);
+                    patientnummer = p.getNummer();
+                }
             }
             int volgnummer = (int)ovz_ovz_list.getSelectedValue();
             admin.deleteExProg(patientnummer, volgnummer);

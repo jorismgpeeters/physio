@@ -19,6 +19,7 @@ public class PatientAdmin {
     
     private DataInterface dataInterface = null;
     private ArrayList<Patient> patientlist = null;
+    private ArrayList<Patient> patientlistByPhysio = null;
     private ArrayList<Physio> physiolist = null;
     private ArrayList<ExerciseProgram> exerciseprogramlist = null;
     private ArrayList<Exercise> exerciselist = null;
@@ -38,6 +39,17 @@ public class PatientAdmin {
     
     public ArrayList<Physio> getPhysios(){
         return physiolist;
+    }
+    
+    public ArrayList<Patient> getPatientsByPhysio(String riziv) throws DataException{
+        if(riziv != null){
+            patientlistByPhysio = dataInterface.readPatientsByPhysio(riziv);
+        }
+        return patientlistByPhysio;
+    }
+    
+    public ArrayList<Patient> getPatientlistByPhysio() throws DataException{
+        return patientlistByPhysio;
     }
     
     public ArrayList<ExerciseProgram> getExercisePrograms(String patientnummer) throws DataException{
